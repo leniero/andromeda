@@ -1,0 +1,128 @@
+@font-face {
+    font-family: 'SFproDisplay';  /* A name to reference in CSS */
+    src: url('../assets/SFproDisplay.otf'); /* Path to your local font file */
+}
+
+
+html, body {
+    height: 100%;
+    display: block;
+    justify-content: center;
+    font-family: 'SFproDisplay ', SFproDisplay, sans-serif;
+    /* max-width: 50%;  */
+    margin: 0 auto;
+
+    width: 100%; /* Or any specific width you want */
+    max-width: 400px; /* Example max width */
+    box-sizing: border-box; /* To include padding and borders in the element's width */
+    text-transform: uppercase;  
+}
+  header h1 {
+    font-family: 'SFproDisplay ', SFproDisplay, sans-serif;
+    display: block;
+    justify-content: space-between;
+    align-items: center;
+    position: center;  /* Make header fixed when scrolling */
+    top: 0;
+    left: 0;
+    width: 100%; 
+    background-color: white;  
+    padding: 0;
+    /* margin-bottom: 10px; */
+    white-space: nowrap;
+    font-size: 17pt;  /* Adjust this value as you prefer */
+    margin-bottom: -20pt; /*This adds space between elements*/
+    text-transform: uppercase;  
+
+
+  }
+
+  /* Header Styles */
+.header-container {
+      font-family: 'SFproDisplay ', SFproDisplay, sans-serif;
+      display: block;
+      justify-content: space-between;
+      align-items: center;
+      position: center;  /* Make header fixed when scrolling */
+      top: 0;
+      left: 0;
+      width: 100%; 
+      background-color: white;  
+      padding: 0;
+      /* margin-bottom: 10px; */
+      white-space: nowrap;
+      text-transform: uppercase;  
+
+    }
+  
+  #emotion-container {
+    font-family: 'SFproDisplay ', SFproDisplay, sans-serif;
+    text-align: center;
+    text-transform: uppercase;  
+
+  }
+  
+  #emotion-form {
+    font-family: 'SFproDisplay ', SFproDisplay, sans-serif;
+    display: inline-block;
+    width: 100%; /* Or any specific width you want */
+    max-width: 400px; /* Example max width */
+    box-sizing: border-box; /* To include padding and borders in the element's width */
+    /* margin-bottom: 20px; This adds space between elements */
+    margin-bottom: -20pt; /*This adds space between elements*/
+    text-transform: uppercase;  
+  }
+
+  #emotion option  {
+    text-transform: uppercase;
+    font-size: 12pt;  /* Adjust this value as you prefer */
+
+}
+
+  
+
+  select, input[type="text"], button {
+    font-family: 'SFproDisplay ', SFproDisplay, sans-serif;
+    display: block;
+    margin: 40px auto;
+    padding: 10px;
+    /* width: 80%; You can adjust this width as needed */
+    width: 100%; /* Or any specific width you want */
+    max-width: 400px; /* Example max width */
+    box-sizing: border-box; /* To include padding and borders in the element's width */
+    text-transform: uppercase;  
+
+  }
+
+    textarea {
+    font-family: 'SFproDisplay ', SFproDisplay, sans-serif;
+    width: 100%; /* Or any specific width you want */
+    max-width: 400px; /* Example max width */
+    box-sizing: border-box; /* To include padding and borders in the element's width */
+    margin-bottom: -20pt; /*This adds space between elements*/
+    text-transform: uppercase;  
+
+ 
+}
+
+  
+  button {
+    font-family: 'SFproDisplay ', SFproDisplay, sans-serif;
+    display: inline-block;
+    width: 100%; /* Or any specific width you want */
+    max-width: 400px; /* Example max width */
+    box-sizing: border-box; /* To include padding and borders in the element's width */
+    /* margin-bottom: 20px; This adds space between elements */
+    text-transform: uppercase;  
+
+  }
+  
+  button:hover {
+    font-family: 'SFproDisplay ', SFproDisplay, sans-serif;
+    opacity: 0.8;
+    text-transform: uppercase;  
+
+  }
+  
+  /* You can add more styling for your dropdown, input box, button, etc., as needed */
+  

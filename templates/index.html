@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emotion Tracker</title>
+    <link rel="stylesheet" type="text/css" href="static/style.css">
+</head>
+<body>
+    <header>
+       <div>
+        <h1>RIGHT HERE. RIGHT NOW. I FEEL...</h1>
+       </div> 
+    </header>
+
+    <div id="emotion-container">
+    <form id="emotion-form">
+        <select id="emotion" name="emotion" required>
+            <option value="Anger">😡 Anger</option>
+            <option value="Contempt">😒 Contempt</option>
+            <option value="Disgust">🤢 Disgust</option>
+            <option value="Envy">😐 Envy</option>
+            <option value="Guilt">😣 Guilt</option>
+            <option value="Shame">😳 Shame</option>
+            <option value="Fear">😨 Fear</option>
+            <option value="Sadness">😢 Sadness</option>
+            <option value="Surprise">😲 Surprise</option>
+            <option value="Interest">🧐 Interest</option>
+            <option value="Hope">🙂 Hope</option>
+            <option value="Relief">😮‍💨 Relief</option>
+            <option value="Satisfaction">😊 Satisfaction</option>
+            <option value="Joy">😆 Joy</option>
+            <option value="Elation">😚 Elation</option>
+            <option value="Pride">🥹 Pride</option>
+        </select>
+    </form>
+
+    <!-- The text input form -->
+    <div>
+        <form id="text_input" style="display: block;">
+            <textarea id="text_input" maxlength="80" placeholder="I feel this way because..."></textarea>
+        </form>
+    </div>
+
+
+    <button type="submit">Submit</button>
+
+    <!-- A placeholder for the confirmation message -->
+    <div id="confirmation-message" style="display: none;">
+        It's Out!
+    </div>
+
+
+    <script>
+        document.getElementById('emotion-form').onsubmit = function(event) {
+            event.preventDefault();
+            
+            // Get the selected emotion
+            const emotion = document.getElementById('emotion').value;
+
+            // Get the user's location
+            navigator.geolocation.getCurrentPosition(function(position) {
+                // Get the current local time
+                const local_time = new Date().toISOString();
+
+                // Prepare the data to send
+                const data = {
+                    emotion: emotion,
+                    text_input: text_input,
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude,
+                    local_time: local_time
+                };
+
+                // Send the data to the server
+                fetch('/submit_emotion', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success:', data);
+                    // You can update the UI here to confirm the emotion was recorded
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+            });
+        };
+    </script>
+</body>
+</html>
