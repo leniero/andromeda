@@ -6,14 +6,14 @@ Emotion Tracker App
 
 Overview
 
-Andromeda is a web app that logs users' emotional states, their reasons, and associates each entry with geolocation data, date, and time. It visualizes emotional intensity through circle size, color-coded emotions, and geographical positioning on an interactive eCloud interface.
+Andromeda is a web app that logs users' emotional states, their reasons, and associates each entry with geolocation data, date, and time. It visualises emotional intensity through circle size, color-coded emotions, and geographical positioning on an interactive eCloud interface.
 
 Features
 
 - Dropdown to select from 16 emotions.
 - Text input for concise emotional reasoning.
 - Real-time tracking of location, date, and time for each entry.
-- Visualization interface reflecting time (circle size), emotion (color), and real-world location (coordinates).
+- Visualisation interface reflecting time (circle size), emotion (color), and real-world location (coordinates).
 
 Technologies Used
 
