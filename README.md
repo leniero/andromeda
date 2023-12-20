@@ -1,6 +1,8 @@
 Andromeda
 Emotion Tracker App
 
+![banner](https://github.com/leniero/Andromeda/assets/67974866/84638dd9-9273-4605-8387-48d3c58e7f53)
+
 Overview
 Emotion Tracker is a web app that logs users' emotional states, their reasons, and associates each entry with geolocation data, date, and time. It visualizes emotional intensity through circle size, color-coded emotions, and geographical positioning on an interactive eCloud interface.
 
