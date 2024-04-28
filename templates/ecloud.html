@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Andromeda - eCloud</title>
+
+    <!-- Include third-party libraries from a CDN -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.min.js"></script>
+
+    <!-- Include your own scripts -->
+    <script
+      type="module"
+      src="{{ url_for('static', filename='visualization.js') }}"
+    ></script>
+    <script
+      type="module"
+      src="{{ url_for('static', filename='script.js') }}"
+    ></script>
+
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body id="eclouds">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.min.js"></script>
+    <script>
+      // Assuming 'emotions' is the variable passed from Flask containing the data
+      const emotionsData = {{ emotions | tojson | safe }};
+    </script>
+
+    <div
+      id="textOverlay"
+      style="
+        position: absolute;
+        display: none;
+        pointer-events: none;
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 10px;
+        border-radius: 5px;
+      "
+    ></div>
+    <button
+      id="submitEmotionBtn"
+      style="position: absolute; bottom: 20px; center: 20px; z-index: 10"
+    >
+      Submit Emotion
+    </button>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        document
+          .getElementById("submitEmotionBtn")
+          .addEventListener("click", function () {
+            window.location.href = "/";
+          });
+      });
+    </script>
+  </body>
+</html>

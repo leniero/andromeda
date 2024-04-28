@@ -1,5 +1,5 @@
 #!/bin/sh
-'''exec' "/Users/leandroniero/Creative Cloud Files/Andromeda/eClouds/venv/bin/python3" "$0" "$@"
+'''exec' "/Users/leandroniero/CLIENTS files/Andromeda/eClouds/venv/bin/python3.12" "$0" "$@"
 ' '''
 # -*- coding: utf-8 -*-
 import re

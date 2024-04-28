@@ -1,67 +1,113 @@
 @font-face {
     font-family: 'SFproDisplay';  /* A name to reference in CSS */
-    src: url('../assets/SFproDisplay.otf'); /* Path to your local font file */
+    src: url('SFproDisplay.otf'); /* Path to your local font file */
 }
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; /* This ensures padding doesn't affect the total width/height */
+}
+
+
+ /* Hide specific elements when the confirmation message is active */
+ body.confirmation-active #emotion-container,
+ body.confirmation-active #large-emoji,
+ body.confirmation-active header,
+ body.confirmation-active .ecloud-button-container {
+   display: none;
+ }
+
+ /* Ensure that the confirmation message is displayed above other content */
+ #confirmation-message {
+   position: fixed;
+   top: 50%;
+   left: 50%;
+   transform: translate(-50%, -50%);
+   font-size: 36px;
+   color: white;
+   z-index: 1050;
+   /* Higher than other items to cover them */
+   display: none;
+   /* Hidden by default */
+   background: rgba(0, 0, 0, 0.8);
+   padding: 0px;
+   border-radius: 10px;
+   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+   text-transform: uppercase;
+ }
 
 
 html, body {
-    height: 100%;
-    display: block;
-    justify-content: center;
-    font-family: 'SFproDisplay ', SFproDisplay, sans-serif;
-    /* max-width: 50%;  */
-    margin: 0 auto;
-
-    width: 100%; /* Or any specific width you want */
-    max-width: 400px; /* Example max width */
-    box-sizing: border-box; /* To include padding and borders in the element's width */
-    text-transform: uppercase;  
-}
-  header h1 {
-    font-family: 'SFproDisplay ', SFproDisplay, sans-serif;
-    display: block;
-    justify-content: space-between;
-    align-items: center;
-    position: center;  /* Make header fixed when scrolling */
-    top: 0;
-    left: 0;
-    width: 100%; 
-    background-color: white;  
-    padding: 0;
-    /* margin-bottom: 10px; */
-    white-space: nowrap;
-    font-size: 17pt;  /* Adjust this value as you prefer */
-    margin-bottom: -20pt; /*This adds space between elements*/
-    text-transform: uppercase;  
-
-
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  /* Stack children vertically */
+  justify-content: center;
+  /* Center children vertically */
+  align-items: center;
+  /* Center children horizontally */
+  font-family: 'SFproDisplay', sans-serif;
+  background-color: black;
+  color: white;
   }
 
+
+header {
+  width: 100%;
+  background-color: inherit;
+  text-align: center;
+}
+header h1 {
+  font-size: 30pt;
+  text-transform: capitalize;
+  text-shadow: 1px 0 10px rgb(0, 0, 0);
+}
+
+h2 {
+  text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.25);
+  /* horizontal-offset vertical-offset blur-radius color */
+}
   /* Header Styles */
 .header-container {
       font-family: 'SFproDisplay ', SFproDisplay, sans-serif;
-      display: block;
       justify-content: space-between;
       align-items: center;
       position: center;  /* Make header fixed when scrolling */
       top: 0;
       left: 0;
       width: 100%; 
-      background-color: white;  
       padding: 0;
       /* margin-bottom: 10px; */
       white-space: nowrap;
-      text-transform: uppercase;  
 
     }
-  
-  #emotion-container {
-    font-family: 'SFproDisplay ', SFproDisplay, sans-serif;
-    text-align: center;
-    text-transform: uppercase;  
+    #large-emoji {
+      font-size: 150px;
+      text-align: center;
+      padding-top: 0%; /* Adjust the value as needed */
+      padding-bottom: 0%;
+      text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
 
   }
   
+
+
+#emotion-container {
+  display: flex;
+  flex-direction: column;
+  /* Stack children vertically */
+  align-items: center;
+  /* Center children horizontally */
+  width: 100%;
+  /* Adjust width as needed */
+  max-width: 400px;
+  /* Set a max-width to prevent over-expansion */
+}
+
   #emotion-form {
     font-family: 'SFproDisplay ', SFproDisplay, sans-serif;
     display: inline-block;
@@ -69,13 +115,15 @@ html, body {
     max-width: 400px; /* Example max width */
     box-sizing: border-box; /* To include padding and borders in the element's width */
     /* margin-bottom: 20px; This adds space between elements */
-    margin-bottom: -20pt; /*This adds space between elements*/
+    margin-bottom: 25%; /*This adds space between elements*/
     text-transform: uppercase;  
+    
   }
 
   #emotion option  {
     text-transform: uppercase;
-    font-size: 12pt;  /* Adjust this value as you prefer */
+    font-size: 20pt;  /* Adjust this value as you prefer */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 
 }
 
@@ -83,17 +131,30 @@ html, body {
 
   select, input[type="text"], button {
     font-family: 'SFproDisplay ', SFproDisplay, sans-serif;
-    display: block;
     margin: 40px auto;
     padding: 10px;
     /* width: 80%; You can adjust this width as needed */
     width: 100%; /* Or any specific width you want */
     max-width: 400px; /* Example max width */
     box-sizing: border-box; /* To include padding and borders in the element's width */
+    border-radius: 100px;
     text-transform: uppercase;  
-
+    background-color: white;
+    color:  black; /* Set the text color to black for better visibility */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   }
 
+
+  #submit-button {
+    background-color: #ffffff7e;
+    border: 1px solid rgba(0, 0, 0, 0); 
+}
+
+  #submit-button:hover, #submit-button:focus{
+    background-color: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.5);
+  }
+  
     textarea {
     font-family: 'SFproDisplay ', SFproDisplay, sans-serif;
     width: 100%; /* Or any specific width you want */
@@ -101,28 +162,139 @@ html, body {
     box-sizing: border-box; /* To include padding and borders in the element's width */
     margin-bottom: -20pt; /*This adds space between elements*/
     text-transform: uppercase;  
-
+    border-radius: 100px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
  
 }
 
+textarea:hover, textarea:focus {
+  background-color: #ffffff; /* White background on hover or focus */
+  /* Rest of your styles */
+}
+
+/* Style the placeholder text */
+input[type="text"]::placeholder,
+textarea::placeholder {
+  color: black;
+  /* or any color you want */
+  opacity: 1;
+  /* Firefox reduces the opacity by default, so you may need to set this */
+}
   
   button {
-    font-family: 'SFproDisplay ', SFproDisplay, sans-serif;
-    display: inline-block;
-    width: 100%; /* Or any specific width you want */
-    max-width: 400px; /* Example max width */
-    box-sizing: border-box; /* To include padding and borders in the element's width */
-    /* margin-bottom: 20px; This adds space between elements */
-    text-transform: uppercase;  
+    padding: 10px 15px;
+    background-color: #ffffff;
+    color: rgb(0, 0, 0);
+    border-radius: 100px;
+    cursor: pointer;
+    font-size: 16px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s;
+    font-weight: bolder;
+    border: black;
+    border-radius: 100px;
+  }
+  
+  button:hover, button:focus {
+    background-color: #ffffff;
 
   }
   
-  button:hover {
-    font-family: 'SFproDisplay ', SFproDisplay, sans-serif;
-    opacity: 0.8;
-    text-transform: uppercase;  
 
-  }
+body#eclouds {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'SFproDisplay ', SFproDisplay, sans-serif;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+  text-transform: uppercase;  
+}
+
+/* ... rest of your CSS ... */
+
+select, input[type="text"], button, textarea, button {
+  font-family: 'SFproDisplay ', SFproDisplay, sans-serif;
+  display: block;
+  margin: 40px auto;
+  padding: 10px;
+  width: 100%;
+  box-sizing: border-box;
+  text-transform: uppercase;  
+  background-color: #ffffff7e;
+  border: 1px solid rgba(0, 0, 0, 0);
+}
+
+select:hover, input[type="text"]:hover,
+select:focus, input[type="text"]:focus {
+  background-color: #ffffff; /* White background on hover or focus */
+  /* Rest of your styles */
+}
+
+#textOverlay {
+  color: #000;
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+  max-width: 200px;
+}
+
+#submitEmotionBtn {
+  padding: 10px 15px;
+  background-color: #ffffff7e;
+  color: rgb(0, 0, 0);
+  box-sizing: border-box;
+  border-radius: 100px;
+  cursor: pointer;
+  font-size: 16px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s;
+  border: black;
+  border-radius: 100px;
+  width: 200px; /* Set width to 50% of its parent container */
+  border: 1px solid rgba(0, 0, 0, 0);
   
-  /* You can add more styling for your dropdown, input box, button, etc., as needed */
-  
+}
+
+#submitEmotionBtn:hover, #submitEmotionBtn:focus{
+  background-color: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+
+
+
+
+#goToEcloudBtn {
+  padding: 10px 10px;
+  background-color: #ffffff7e;
+  color: rgb(0, 0, 0);
+  border: black;
+  border-radius: 100px;
+  cursor: pointer;
+  font-size: 16px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s;
+  position: absolute;
+  bottom: 20px;       /* Or the necessary amount to move below the 'Submit Emotion' button */
+  left: 50%;
+  transform: translateX(-50%);
+  text-transform: none;
+  font-weight: bold;
+  width: 200px; /* Set width to 50% of its parent container */
+  border: 1px solid rgba(0, 0, 0, 0);
+}
+
+#goToEcloudBtn:hover, #goToEcloudBtn:focus{
+  background-color: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+ /* Hide specific elements when the confirmation message is active */
+ body.confirmation-active #emotion-container,
+ body.confirmation-active #large-emoji,
+ body.confirmation-active header,
+ body.confirmation-active .ecloud-button-container {
+   display: none;
+ }
