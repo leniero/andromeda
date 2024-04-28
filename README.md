@@ -17,7 +17,7 @@ Andromeda is a web app that logs users' emotional states, their reasons, and ass
 
 ## Technologies Used
 
-- Front-end: HTML5, CSS3, JavaScript.
+- Front-end: HTML5, CSS3, JavaScript, Three.js.
 - Back-end: Python, Flask, Socket.IO.
 
 ## Setup
