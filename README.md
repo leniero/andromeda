@@ -2,7 +2,7 @@ Andromeda
 
 Emotion Tracker App
 
-![banner](assets/static/banner.png)
+![banner](/static/banner.png)
 
 Overview
 
