@@ -2,7 +2,7 @@ Andromeda
 
 Emotion Tracker App
 
-![banner](https://github.com/leniero/Andromeda/assets/67974866/84638dd9-9273-4605-8387-48d3c58e7f53)
+![banner](https://github.com/leniero/Andromeda/banner.png)
 
 Overview
 
