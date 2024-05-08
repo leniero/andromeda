@@ -13,7 +13,7 @@ Andromeda is a web app that logs users' emotional states, their reasons, and ass
 - Dropdown to select from 16 emotions.
 - Text input for concise emotional reasoning.
 - Real-time tracking of location, date, and time for each entry.
-- Visualisation interface reflecting time (circle size), emotion (color), and real-world location (coordinates).
+- Visualisation interface reflecting time (circle size), emotion (colour), and real-world location (coordinates).
 
 ## Technologies Used
 
