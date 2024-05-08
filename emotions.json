@@ -84,13 +84,6 @@
         "local_time": "2023-12-27 00:00:00"
     },
     {
-        "emotion": "Envy",
-        "text_input": "Envious of a colleague's new car.",
-        "latitude": 45.31433963871356,
-        "longitude": -17.398428594483306,
-        "local_time": "2024-01-05 00:00:00"
-    },
-    {
         "emotion": "Relief",
         "text_input": "Relieved that the medical tests came back negative.",
         "latitude": 35.82271304207511,
@@ -109,6 +102,20 @@
         "text_input": "Proud after being recognized for volunteering.",
         "latitude": -88.17186975756995,
         "longitude": -102.57229033239608,
-        "local_time": "2024-04-15 00:00:00"
+        "local_time": "2024-03-15 00:00:00"
+    },
+    {
+        "emotion": "Pride",
+        "text_input": "andromeda is looking good!!",
+        "latitude": 51.5618871,
+        "longitude": -0.0736935,
+        "local_time": "2024-05-03T16:46:10.533Z"
+    },
+    {
+        "emotion": "Interest",
+        "text_input": "is it all still working??",
+        "latitude": 51.5618862,
+        "longitude": -0.0737125,
+        "local_time": "2024-05-08T20:35:20.471Z"
     }
 ]
