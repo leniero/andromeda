@@ -33,4 +33,4 @@ Interested in contributing? Get in touch to fork the project, suggest improvemen
 
 This project is licensed under the [MIT License](LICENSE).
 
-For contact details, visit [www.leandro-niero.com](https://www.leandro-niero.com/pages/andromeda).
+For contact details, visit [www.leandro-niero.com/pages/andromeda](https://www.leandro-niero.com/pages/andromeda).
