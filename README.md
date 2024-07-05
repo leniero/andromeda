@@ -1,6 +1,6 @@
 # Andromeda
 ## Emotion Tracker and Visualiser
-![andromeda](andromeda-cover.png)
+![alt text](documentation/andromeda-cover.png)
 
 ## Context and Need
 In today's fast-paced digital world, individuals often struggle to process and articulate their emotions. Traditional social networks are primarily focused on connection through personal information sharing and curated images, which can sometimes contribute to a superficial understanding of one's emotional state. Without a dedicated platform to anonymously express and visualise emotions, users may miss the opportunity for deeper self-reflection and empathy.
@@ -28,7 +28,7 @@ The original Andromeda application effectively logs and visualizes user emotions
 [Prototype Video Demo](https://vimeo.com/942423078)
 
 ### Wireframes
-![Wireframes](wireframes.png)
+![alt text](documentation/wireframes.png)
 
 ## Architecture
 **The architecture will follow the N-Tier structure, including**:
