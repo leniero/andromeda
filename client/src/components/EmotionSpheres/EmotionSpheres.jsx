@@ -13,7 +13,7 @@ const EmotionSpheres = ({ emotionsData, width, height, setScene, setCamera, text
     if (!container) return;
 
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(60, width / height, 0.1, 10000);
+    const camera = new THREE.PerspectiveCamera(60, width / height, 0.5, 10000);
     const renderer = new THREE.WebGLRenderer();
     renderer.setSize(width, height);
     container.appendChild(renderer.domElement);
@@ -21,7 +21,7 @@ const EmotionSpheres = ({ emotionsData, width, height, setScene, setCamera, text
     rendererRef.current = renderer;
 
     new OrbitControls(camera, renderer.domElement);
-    camera.position.set(0, 0, 1500);
+    camera.position.set(0, 0, 4800);
     camera.updateProjectionMatrix();
 
     const emotionColors = {
@@ -32,30 +32,48 @@ const EmotionSpheres = ({ emotionsData, width, height, setScene, setCamera, text
       'Pride': 'darkviolet'
     };
 
-    const scaleSize = (localTime, oldestTime, newestTime, minSize, maxSize) => {
-      const localMilliseconds = new Date(localTime).getTime();
-      const oldestMilliseconds = new Date(oldestTime).getTime();
-      const newestMilliseconds = new Date(newestTime).getTime();
-      const normalizedTime = (localMilliseconds - oldestMilliseconds) / (newestMilliseconds - oldestMilliseconds);
-      return normalizedTime * (maxSize - minSize) + minSize;
+    // Step 1: Implement a function to calculate density
+    const calculateDensity = (currentEmotion, emotionsData, radiusThreshold) => {
+      const currentLatRad = THREE.MathUtils.degToRad(currentEmotion.latitude);
+      const currentLonRad = THREE.MathUtils.degToRad(currentEmotion.longitude);
+      let count = 0;
+      emotionsData.forEach(emotion => {
+        const latRad = THREE.MathUtils.degToRad(emotion.latitude);
+        const lonRad = THREE.MathUtils.degToRad(emotion.longitude);
+        // Calculate spherical distance
+        const d = Math.acos(Math.sin(currentLatRad) * Math.sin(latRad) + Math.cos(currentLatRad) * Math.cos(latRad) * Math.cos(Math.abs(currentLonRad - lonRad))) * 6371;
+        if (d <= radiusThreshold) count++;
+      });
+      return count;
     };
 
-    const minSize = 50;
-    const maxSize = 200;
+  // Modify the scaleSize function to include density
+  const scaleSize = (localTime, oldestTime, newestTime, minSize, maxSize, density) => {
+    const timeScale = (new Date(localTime).getTime() - new Date(oldestTime).getTime()) / (new Date(newestTime).getTime() - new Date(oldestTime).getTime());
+    // Adjust size based on density, more density means smaller size
+    const densityFactor = 1 / Math.sqrt(density); // Example adjustment, can be modified
+    return (timeScale * (maxSize - minSize) + minSize) * densityFactor;
+  };
+
+    const minSize = 75;
+    const maxSize = 350;
 
     const oldestTime = new Date(Math.min(...emotionsData.map(e => new Date(e.local_time).getTime())));
     const newestTime = new Date(Math.max(...emotionsData.map(e => new Date(e.local_time).getTime())));
 
+    // Step 3 & 4: Adjust sphere size based on density within the forEach loop
     emotionsData.forEach(emotion => {
       const color = emotionColors[emotion.emotion] || 'gray';
-      const size = scaleSize(emotion.local_time, oldestTime, newestTime, minSize, maxSize);
+      // Calculate density for each emotion
+      const density = calculateDensity(emotion, emotionsData, 1500); // 500 km as an example threshold
+      const size = scaleSize(emotion.local_time, oldestTime, newestTime, minSize, maxSize, density);
       const geometry = new THREE.SphereGeometry(size, 32, 32);
       const material = new THREE.MeshBasicMaterial({ color });
       const sphere = new THREE.Mesh(geometry, material);
 
       const latitudeInRadians = THREE.MathUtils.degToRad(emotion.latitude);
       const longitudeInRadians = THREE.MathUtils.degToRad(emotion.longitude);
-      const radius = 1000;
+      const radius = 1500;
 
       const x = radius * Math.cos(latitudeInRadians) * Math.sin(longitudeInRadians);
       const y = radius * Math.sin(latitudeInRadians);

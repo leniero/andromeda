@@ -21,7 +21,7 @@ const TextOverlay = ({ emotionsData, scene, camera }) => {
         );
 
         if (sphere) {
-          const textGroup = createTextGroup(font, emotion);
+          const textGroup = createTextGroup(font, emotion, sphere.geometry.parameters.radius);
           textGroup.userData = { sphere, emotion, rotationSpeed: -(Math.random() * 0.0005 + 0.00025) };
           scene.add(textGroup);
           textMeshRef.current.push(textGroup);
@@ -36,16 +36,16 @@ const TextOverlay = ({ emotionsData, scene, camera }) => {
     };
   }, [emotionsData, scene, camera]);
 
-  const createTextGroup = (font, emotion) => {
+  const createTextGroup = (font, emotion, sphereRadius) => {
     const textGroup = new THREE.Group();
     const textLength = emotion.text_input.length;
     const angleIncrement = (2 * Math.PI) / textLength;
-    const radius = 250; // Radius for circular text layout
+    const radius = sphereRadius * 1.65; // Adjust the multiplier to set text distance from the sphere
 
     for (let i = 0; i < textLength; i++) {
       const charGeometry = new TextGeometry(emotion.text_input.charAt(i), {
         font: font,
-        size: 45,
+        size: sphereRadius * 0.4, // Adjust the multiplier to set the text size relative to the sphere
         depth: 1,
         curveSegments: 24,
         bevelEnabled: false,
@@ -76,6 +76,9 @@ const TextOverlay = ({ emotionsData, scene, camera }) => {
         if (sphere) {
           textGroup.position.copy(sphere.position);
           textGroup.rotation.z += rotationSpeed; // Rotate around the Z axis
+
+          // Ensure text group always faces the camera
+          // textGroup.lookAt(camera.position);
         }
       });
     };
