@@ -1,0 +1,16 @@
+[
+  {
+    "_id": { "$oid": "60d0fe4f5311236168a109ca" },
+    "username": "testuser1",
+    "email": "test1@example.com",
+    "password": "hashedpassword1",
+    "role": "user"
+  },
+  {
+    "_id": { "$oid": "60d0fe4f5311236168a109cb" },
+    "username": "testuser2",
+    "email": "test2@example.com",
+    "password": "hashedpassword2",
+    "role": "user"
+  }
+]

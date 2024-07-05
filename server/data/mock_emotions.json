@@ -1,0 +1,138 @@
+[
+  {
+    "user": "60d0fe4f5311236168a109ca",
+    "emotion": "Satisfaction",
+    "text_input": "Content with the peaceful morning coffee ritual.",
+    "latitude": 6.00754613997196,
+    "longitude": 4.03973654286031,
+    "local_time": "2023-12-26T09:59:16Z"
+  },
+  {
+    "user": "60d0fe4f5311236168a109ca",
+    "emotion": "Interest",
+    "text_input": "Intrigued by the mystery novel's unexpected plot twist.",
+    "latitude": -36.9236415962287,
+    "longitude": -99.7564536217126,
+    "local_time": "2023-12-20T14:30:01Z"
+  },
+  {
+    "user": "60d0fe4f5311236168a109ca",
+    "emotion": "Fear",
+    "text_input": "Anxious about the upcoming public speaking event.",
+    "latitude": 45.9381013850422,
+    "longitude": -70.7665509169319,
+    "local_time": "2023-12-28T15:24:20Z"
+  },
+  {
+    "user": "60d0fe4f5311236168a109ca",
+    "emotion": "Sadness",
+    "text_input": "Heartache from watching the old, wilting tree.",
+    "latitude": -2.3967774018283,
+    "longitude": 31.5484334452855,
+    "local_time": "2023-12-24T13:27:20Z"
+  },
+  {
+    "user": "60d0fe4f5311236168a109ca",
+    "emotion": "Relief",
+    "text_input": "Relaxed after the final exams were over.",
+    "latitude": 31.3518174804249,
+    "longitude": -128.11995192632,
+    "local_time": "2023-12-26T18:37:57Z"
+  },
+  {
+    "user": "60d0fe4f5311236168a109ca",
+    "emotion": "Contempt",
+    "text_input": "Disdain for the unfair decision at work.",
+    "latitude": 60.9105308736091,
+    "longitude": 128.328579591285,
+    "local_time": "2023-12-19T19:46:10Z"
+  },
+  {
+    "user": "60d0fe4f5311236168a109ca",
+    "emotion": "Satisfaction",
+    "text_input": "Pleased with the successful surprise party organized.",
+    "latitude": -80.4809645170584,
+    "longitude": -122.293299564444,
+    "local_time": "2023-12-22T08:51:18Z"
+  },
+  {
+    "user": "60d0fe4f5311236168a109ca",
+    "emotion": "Anger",
+    "text_input": "Upset over the broken vase - a family heirloom.",
+    "latitude": -15.7418089903026,
+    "longitude": 68.188257144137,
+    "local_time": "2023-12-25T17:01:05Z"
+  },
+  {
+    "user": "60d0fe4f5311236168a109ca",
+    "emotion": "Sadness",
+    "text_input": "Feeling down due to the rainy weather all week.",
+    "latitude": 26.5684391567355,
+    "longitude": 103.236437189377,
+    "local_time": "2023-12-24T15:17:38Z"
+  },
+  {
+    "user": "60d0fe4f5311236168a109ca",
+    "emotion": "Joy",
+    "text_input": "Elated from the unexpected promotion at work.",
+    "latitude": -3.89968461538085,
+    "longitude": 52.1400694429965,
+    "local_time": "2023-12-25T20:32:22Z"
+  },
+  {
+    "user": "60d0fe4f5311236168a109ca",
+    "emotion": "Elation",
+    "text_input": "Overjoyed by the unexpected gift from a friend.",
+    "latitude": 43.757575499654195,
+    "longitude": -141.72566301369204,
+    "local_time": "2023-12-26T00:00:00Z"
+  },
+  {
+    "user": "60d0fe4f5311236168a109ca",
+    "emotion": "Surprise",
+    "text_input": "Surprised by the sudden visit from an old friend.",
+    "latitude": -65.3113548775941,
+    "longitude": 127.06893144608256,
+    "local_time": "2023-12-27T00:00:00Z"
+  },
+  {
+    "user": "60d0fe4f5311236168a109ca",
+    "emotion": "Relief",
+    "text_input": "Relieved that the medical tests came back negative.",
+    "latitude": 35.82271304207511,
+    "longitude": 91.68227667869684,
+    "local_time": "2024-01-06T00:00:00Z"
+  },
+  {
+    "user": "60d0fe4f5311236168a109ca",
+    "emotion": "Shame",
+    "text_input": "Ashamed after making a mistake at work.",
+    "latitude": 79.50410687731596,
+    "longitude": 156.4035616024422,
+    "local_time": "2024-01-07T00:00:00Z"
+  },
+  {
+    "user": "60d0fe4f5311236168a109ca",
+    "emotion": "Pride",
+    "text_input": "Proud after being recognized for volunteering.",
+    "latitude": -88.17186975756995,
+    "longitude": -102.57229033239608,
+    "local_time": "2024-03-15T00:00:00Z"
+  },
+  {
+    "user": "60d0fe4f5311236168a109ca",
+    "emotion": "Pride",
+    "text_input": "Andromeda is looking good!!",
+    "latitude": 51.5618871,
+    "longitude": -0.0736935,
+    "local_time": "2024-05-03T16:46:10.533Z"
+  },
+  {
+    "user": "60d0fe4f5311236168a109ca",
+    "emotion": "Interest",
+    "text_input": "Is it all still working??",
+    "latitude": 51.5618862,
+    "longitude": -0.0737125,
+    "local_time": "2024-05-08T20:35:20.471Z"
+  }
+]
