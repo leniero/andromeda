@@ -32,7 +32,6 @@ const EmotionSpheres = ({ emotionsData, width, height, setScene, setCamera, text
       'Pride': 'darkviolet'
     };
 
-    // Step 1: Implement a function to calculate density
     const calculateDensity = (currentEmotion, emotionsData, radiusThreshold) => {
       const currentLatRad = THREE.MathUtils.degToRad(currentEmotion.latitude);
       const currentLonRad = THREE.MathUtils.degToRad(currentEmotion.longitude);
@@ -40,20 +39,17 @@ const EmotionSpheres = ({ emotionsData, width, height, setScene, setCamera, text
       emotionsData.forEach(emotion => {
         const latRad = THREE.MathUtils.degToRad(emotion.latitude);
         const lonRad = THREE.MathUtils.degToRad(emotion.longitude);
-        // Calculate spherical distance
         const d = Math.acos(Math.sin(currentLatRad) * Math.sin(latRad) + Math.cos(currentLatRad) * Math.cos(latRad) * Math.cos(Math.abs(currentLonRad - lonRad))) * 6371;
         if (d <= radiusThreshold) count++;
       });
       return count;
     };
 
-  // Modify the scaleSize function to include density
-  const scaleSize = (localTime, oldestTime, newestTime, minSize, maxSize, density) => {
-    const timeScale = (new Date(localTime).getTime() - new Date(oldestTime).getTime()) / (new Date(newestTime).getTime() - new Date(oldestTime).getTime());
-    // Adjust size based on density, more density means smaller size
-    const densityFactor = 1 / Math.sqrt(density); // Example adjustment, can be modified
-    return (timeScale * (maxSize - minSize) + minSize) * densityFactor;
-  };
+    const scaleSize = (localTime, oldestTime, newestTime, minSize, maxSize, density) => {
+      const timeScale = (new Date(localTime).getTime() - new Date(oldestTime).getTime()) / (new Date(newestTime).getTime() - new Date(oldestTime).getTime());
+      const densityFactor = 1 / Math.sqrt(density);
+      return (timeScale * (maxSize - minSize) + minSize) * densityFactor;
+    };
 
     const minSize = 75;
     const maxSize = 350;
@@ -61,11 +57,9 @@ const EmotionSpheres = ({ emotionsData, width, height, setScene, setCamera, text
     const oldestTime = new Date(Math.min(...emotionsData.map(e => new Date(e.local_time).getTime())));
     const newestTime = new Date(Math.max(...emotionsData.map(e => new Date(e.local_time).getTime())));
 
-    // Step 3 & 4: Adjust sphere size based on density within the forEach loop
     emotionsData.forEach(emotion => {
       const color = emotionColors[emotion.emotion] || 'gray';
-      // Calculate density for each emotion
-      const density = calculateDensity(emotion, emotionsData, 1500); // 500 km as an example threshold
+      const density = calculateDensity(emotion, emotionsData, 7000);
       const size = scaleSize(emotion.local_time, oldestTime, newestTime, minSize, maxSize, density);
       const geometry = new THREE.SphereGeometry(size, 32, 32);
       const material = new THREE.MeshBasicMaterial({ color });
@@ -99,9 +93,9 @@ const EmotionSpheres = ({ emotionsData, width, height, setScene, setCamera, text
     const applyTextEffects = (textMesh) => {
       textMesh.children.forEach((charMesh) => {
         if (charMesh.material && charMesh.material.color) {
-          charMesh.material.color.setHex(0x000000); // Change text color to black
+          charMesh.material.color.setHex(0xffffff); // Change text color to red
+          charMesh.scale.set(1.5, 1.5, 1.5); // Scale text size
         }
-        charMesh.rotationSpeed = 0.05; // Increase rotation speed
       });
 
       const ringGeometry = new THREE.RingGeometry(300, 320, 32);
@@ -116,8 +110,10 @@ const EmotionSpheres = ({ emotionsData, width, height, setScene, setCamera, text
       textMesh.children.forEach((charMesh) => {
         if (charMesh.material && charMesh.material.color) {
           charMesh.material.color.setHex(0xffffff); // Reset text color to white
+           charMesh.scale.set(1, 1, 1); // Scale text size
+
         }
-        charMesh.rotationSpeed = 0.001; // Reset rotation speed
+        charMesh.rotationSpeed = 20; // Reset rotation speed
       });
 
       const ring = textMesh.children.find(child => child.geometry && child.geometry.type === 'RingGeometry');
@@ -171,10 +167,11 @@ const EmotionSpheres = ({ emotionsData, width, height, setScene, setCamera, text
     };
 
     container.addEventListener('click', handleMouseClick);
-
-    const animate = () => {
+  
+    
+  const animate = () => {
       requestAnimationFrame(animate);
-
+    
       let time = Date.now() * 0.025;
 
       scene.children.forEach((sphere) => {
@@ -190,6 +187,27 @@ const EmotionSpheres = ({ emotionsData, width, height, setScene, setCamera, text
           sphere.position.z =
             sphere.originalPosition.z +
             Math.sin(time * params.speed + params.offsetZ) * params.amplitudeZ * factor;
+        }
+      });
+
+    // Update the text groups to face the camera
+      textMeshRef.current.forEach(textGroup => {
+        const { sphere, rotationSpeed } = textGroup.userData;
+        if (sphere) {
+          textGroup.position.copy(sphere.position);
+
+          // Rotate around the Z axis
+          textGroup.children.forEach(zRotationGroup => {
+            if (zRotationGroup.userData.isZRotationGroup) {
+              zRotationGroup.rotation.z += rotationSpeed;
+            }
+          });
+
+          // Ensure text group always faces the camera
+          const direction = new THREE.Vector3();
+          direction.subVectors(camera.position, textGroup.position).normalize();
+          const quaternion = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 0, 1), direction);
+          textGroup.setRotationFromQuaternion(quaternion);
         }
       });
 

@@ -1,15 +1,13 @@
-import { useRef, useEffect } from 'react';
+import { useEffect } from 'react';
 import * as THREE from 'three';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
 import './TextOverlay.module.css';
 
-const TextOverlay = ({ emotionsData, scene, camera }) => {
-  const textMeshRef = useRef([]);
-
+const TextOverlay = ({ emotionsData, scene, camera, textMeshRef }) => {
   useEffect(() => {
-    if (!camera) {
-      console.error('Camera is not defined');
+    if (!camera || !scene) {
+      console.error('Camera or Scene is not defined');
       return;
     }
 
@@ -22,7 +20,8 @@ const TextOverlay = ({ emotionsData, scene, camera }) => {
 
         if (sphere) {
           const textGroup = createTextGroup(font, emotion, sphere.geometry.parameters.radius);
-          textGroup.userData = { sphere, emotion, rotationSpeed: -(Math.random() * 0.0005 + 0.00025) };
+          // Set a constant rotation speed here
+          textGroup.userData = { sphere, emotion, rotationSpeed: 1 }; // Adjust this value as needed
           scene.add(textGroup);
           textMeshRef.current.push(textGroup);
           console.log('Text group added:', textGroup);
@@ -34,7 +33,7 @@ const TextOverlay = ({ emotionsData, scene, camera }) => {
       textMeshRef.current.forEach(textGroup => scene.remove(textGroup));
       textMeshRef.current = [];
     };
-  }, [emotionsData, scene, camera]);
+  }, [emotionsData, scene, camera, textMeshRef]);
 
   const createTextGroup = (font, emotion, sphereRadius) => {
     const textGroup = new THREE.Group();
@@ -66,25 +65,6 @@ const TextOverlay = ({ emotionsData, scene, camera }) => {
 
     return textGroup;
   };
-
-  useEffect(() => {
-    const animate = () => {
-      requestAnimationFrame(animate);
-
-      textMeshRef.current.forEach(textGroup => {
-        const { sphere, rotationSpeed } = textGroup.userData;
-        if (sphere) {
-          textGroup.position.copy(sphere.position);
-          textGroup.rotation.z += rotationSpeed; // Rotate around the Z axis
-
-          // Ensure text group always faces the camera
-          // textGroup.lookAt(camera.position);
-        }
-      });
-    };
-
-    animate();
-  }, [camera]);
 
   return null; // This component does not render anything itself
 };
