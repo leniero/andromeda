@@ -13,7 +13,7 @@ const EmotionSpheres = ({ emotionsData, width, height, setScene, setCamera, text
     if (!container) return;
 
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(60, width / height, 0.5, 10000);
+    const camera = new THREE.PerspectiveCamera(50, width / height, 1, 10000);
     const renderer = new THREE.WebGLRenderer();
     renderer.setSize(width, height);
     container.appendChild(renderer.domElement);
@@ -21,7 +21,7 @@ const EmotionSpheres = ({ emotionsData, width, height, setScene, setCamera, text
     rendererRef.current = renderer;
 
     new OrbitControls(camera, renderer.domElement);
-    camera.position.set(0, 0, 4800);
+    camera.position.set(0, 0, 4000);
     camera.updateProjectionMatrix();
 
     const emotionColors = {
@@ -45,36 +45,36 @@ const EmotionSpheres = ({ emotionsData, width, height, setScene, setCamera, text
       return count;
     };
 
-    const scaleSize = (localTime, oldestTime, newestTime, minSize, maxSize, density) => {
-      const timeScale = (new Date(localTime).getTime() - new Date(oldestTime).getTime()) / (new Date(newestTime).getTime() - new Date(oldestTime).getTime());
-      const densityFactor = 1 / Math.sqrt(density);
-      return (timeScale * (maxSize - minSize) + minSize) * densityFactor;
+    // Function to calculate size over time
+    const calculateSizeOverTime = (creationTime, minSize, maxSize) => {
+      const now = new Date().getTime();
+      const elapsed = now - new Date(creationTime).getTime();
+      const totalDuration = 128 * 60 * 60 * 1000; // 24 hours in milliseconds
+      const sizeScale = Math.max(minSize, maxSize - ((elapsed / totalDuration) * (maxSize - minSize)));
+      return sizeScale;
     };
 
-    const minSize = 75;
-    const maxSize = 350;
-
-    const oldestTime = new Date(Math.min(...emotionsData.map(e => new Date(e.local_time).getTime())));
-    const newestTime = new Date(Math.max(...emotionsData.map(e => new Date(e.local_time).getTime())));
+    const minSize = 200;
+    const maxSize = 1800;
 
     emotionsData.forEach(emotion => {
       const color = emotionColors[emotion.emotion] || 'gray';
-      const density = calculateDensity(emotion, emotionsData, 7000);
-      const size = scaleSize(emotion.local_time, oldestTime, newestTime, minSize, maxSize, density);
-      const geometry = new THREE.SphereGeometry(size, 32, 32);
+      const density = calculateDensity(emotion, emotionsData, 100000000000);
+      const initialSize = maxSize; // Start with the maximum size
+      const geometry = new THREE.SphereGeometry(initialSize, 32, 32);
       const material = new THREE.MeshBasicMaterial({ color });
       const sphere = new THREE.Mesh(geometry, material);
 
       const latitudeInRadians = THREE.MathUtils.degToRad(emotion.latitude);
       const longitudeInRadians = THREE.MathUtils.degToRad(emotion.longitude);
-      const radius = 1500;
+      const radius = 1000;
 
       const x = radius * Math.cos(latitudeInRadians) * Math.sin(longitudeInRadians);
       const y = radius * Math.sin(latitudeInRadians);
       const z = radius * Math.cos(latitudeInRadians) * Math.cos(longitudeInRadians);
 
       sphere.position.set(x, y, z);
-      sphere.userData = { text_input: emotion.text_input, emotion };
+      sphere.userData = { text_input: emotion.text_input, emotion, creationTime: emotion.local_time, density };
       sphere.originalPosition = { x, y, z };
 
       sphere.animationParams = {
@@ -98,7 +98,7 @@ const EmotionSpheres = ({ emotionsData, width, height, setScene, setCamera, text
         }
       });
 
-      const ringGeometry = new THREE.RingGeometry(300, 320, 32);
+      const ringGeometry = new THREE.RingGeometry(100, 100, 32);
       const ringMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide });
       const ring = new THREE.Mesh(ringGeometry, ringMaterial);
       ring.position.copy(textMesh.position);
@@ -110,8 +110,7 @@ const EmotionSpheres = ({ emotionsData, width, height, setScene, setCamera, text
       textMesh.children.forEach((charMesh) => {
         if (charMesh.material && charMesh.material.color) {
           charMesh.material.color.setHex(0xffffff); // Reset text color to white
-           charMesh.scale.set(1, 1, 1); // Scale text size
-
+          charMesh.scale.set(1, 1, 1); // Scale text size
         }
         charMesh.rotationSpeed = 20; // Reset rotation speed
       });
@@ -167,11 +166,10 @@ const EmotionSpheres = ({ emotionsData, width, height, setScene, setCamera, text
     };
 
     container.addEventListener('click', handleMouseClick);
-  
-    
-  const animate = () => {
+
+    const animate = () => {
       requestAnimationFrame(animate);
-    
+
       let time = Date.now() * 0.025;
 
       scene.children.forEach((sphere) => {
@@ -187,10 +185,26 @@ const EmotionSpheres = ({ emotionsData, width, height, setScene, setCamera, text
           sphere.position.z =
             sphere.originalPosition.z +
             Math.sin(time * params.speed + params.offsetZ) * params.amplitudeZ * factor;
+
+          // Update sphere size based on elapsed time
+          const size = calculateSizeOverTime(sphere.userData.creationTime, minSize, maxSize);
+          const densityFactor = 0.5 / Math.sqrt(sphere.userData.density); // Example adjustment for density
+          const finalSize = size * densityFactor;
+          sphere.scale.set(finalSize / maxSize, finalSize / maxSize, finalSize / maxSize);
+
+          // Update the corresponding text group size
+          const textGroup = textMeshRef.current.find(
+            (mesh) => mesh.userData.emotion._id === sphere.userData.emotion._id
+          );
+
+          if (textGroup) {
+            const textSizeFactor = finalSize / maxSize;
+            textGroup.scale.set(textSizeFactor, textSizeFactor, textSizeFactor);
+          }
         }
       });
 
-    // Update the text groups to face the camera
+      // Update the text groups to face the camera
       textMeshRef.current.forEach(textGroup => {
         const { sphere, rotationSpeed } = textGroup.userData;
         if (sphere) {

@@ -20,8 +20,7 @@ const TextOverlay = ({ emotionsData, scene, camera, textMeshRef }) => {
 
         if (sphere) {
           const textGroup = createTextGroup(font, emotion, sphere.geometry.parameters.radius);
-          // Set a constant rotation speed here
-          textGroup.userData = { sphere, emotion, rotationSpeed: 1 }; // Adjust this value as needed
+          textGroup.userData = { sphere, emotion, rotationSpeed: -0.0025 }; // Adjust this value for constant z-axis rotation
           scene.add(textGroup);
           textMeshRef.current.push(textGroup);
           console.log('Text group added:', textGroup);
@@ -39,12 +38,12 @@ const TextOverlay = ({ emotionsData, scene, camera, textMeshRef }) => {
     const textGroup = new THREE.Group();
     const textLength = emotion.text_input.length;
     const angleIncrement = (2 * Math.PI) / textLength;
-    const radius = sphereRadius * 1.65; // Adjust the multiplier to set text distance from the sphere
+    const radius = sphereRadius * 1.4; // Adjust the multiplier to set text distance from the sphere
 
     for (let i = 0; i < textLength; i++) {
       const charGeometry = new TextGeometry(emotion.text_input.charAt(i), {
         font: font,
-        size: sphereRadius * 0.4, // Adjust the multiplier to set the text size relative to the sphere
+        size: sphereRadius * 0.25, // Adjust the multiplier to set the text size relative to the sphere
         depth: 1,
         curveSegments: 24,
         bevelEnabled: false,
@@ -60,7 +59,12 @@ const TextOverlay = ({ emotionsData, scene, camera, textMeshRef }) => {
       charMesh.position.set(x, y, 0);
       charMesh.rotation.z = angle + Math.PI / 2; // Facing outward
 
-      textGroup.add(charMesh);
+      // Create a group for Z rotation
+      const zRotationGroup = new THREE.Group();
+      zRotationGroup.userData.isZRotationGroup = true;
+      zRotationGroup.add(charMesh);
+
+      textGroup.add(zRotationGroup);
     }
 
     return textGroup;
