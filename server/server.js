@@ -1,11 +1,12 @@
 // server.js
+require('dotenv').config({ path: '.env.development' });
+
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const authRoutes = require('./routes/authRoutes');
 const emotionRoutes = require('./routes/emotionRoutes');
 const userRoutes = require('./routes/userRoutes');
-require('dotenv').config({ path: '.env.production' }); // Ensure to load environment variables
 
 mongoose.set('debug', true);
 
@@ -14,6 +15,7 @@ const app = express();
 // Add the frontend URL to the allowed origins
 const allowedOrigins = [
   'http://localhost:3000',
+  'http://localhost:4200',
   'https://andromeda-inky.vercel.app',
   'https://andromeda-server.vercel.app'
 ];

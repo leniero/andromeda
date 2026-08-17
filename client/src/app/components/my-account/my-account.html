@@ -1,0 +1,28 @@
+<div class="auth-container">
+  <div class="glass-card">
+    <h2>My Account</h2>
+    
+    <div class="profile-info" *ngIf="user; else loading">
+      <div class="account-info" style="display: flex; flex-direction: column; gap: 1rem;">
+        <p style="text-align: center;"><strong>Email:</strong> {{ user.email }}</p>
+
+        <a routerLink="/change-password" class="btn-primary" style="display: block; text-align: center;">
+          Change Password
+        </a>
+
+        <button class="btn-secondary w-100" style="display: block; width: 100%" (click)="logout()">
+          Logout
+        </button>
+      </div>
+    </div>
+
+    <ng-template #loading>
+      <div *ngIf="error; else spinner" class="error-msg">
+        {{ error }}
+      </div>
+      <ng-template #spinner>
+        <p class="text-center">Loading profile...</p>
+      </ng-template>
+    </ng-template>
+  </div>
+</div>

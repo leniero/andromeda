@@ -1,17 +1,33 @@
 // middleware/auth.js
-const jwt = require('jsonwebtoken');
+const { expressjwt: expressJwt } = require('express-jwt');
+const secret = process.env.JWT_SECRET;
 
-module.exports = function (req, res, next) {
-    const token = req.header('Authorization').replace('Bearer ', '');
-    if (!token) {
-        return res.status(401).json({ message: 'No token, authorization denied' });
-    }
+if (!secret) {
+  throw new Error('JWT_SECRET environment variable is not defined');
+}
 
-    try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.user = decoded.user;
-        next();
-    } catch (err) {
-        res.status(401).json({ message: 'Token is not valid' });
-    }
+const getTokenFromHeaders = (req) => {
+  const { headers: { authorization } } = req;
+  if (authorization && authorization.split(' ')[0] === 'Bearer') {
+    return authorization.split(' ')[1];
+  }
+  return null;
 };
+
+const auth = {
+  required: expressJwt({
+    secret,
+    algorithms: ['HS256'],
+    getToken: getTokenFromHeaders,
+    requestProperty: 'user',
+  }),
+  optional: expressJwt({
+    secret,
+    algorithms: ['HS256'],
+    getToken: getTokenFromHeaders,
+    credentialsRequired: false,
+    requestProperty: 'user',
+  }),
+};
+
+module.exports = auth;

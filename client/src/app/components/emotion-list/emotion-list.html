@@ -1,0 +1,35 @@
+<div class="pageContainer">
+  <div class="container">
+    <ul class="emotionList">
+      <li 
+        *ngFor="let emotion of emotions" 
+        class="emotionItem" 
+        [ngClass]="{'myEmotion': emotion.userId === currentUser?._id}">
+        
+        <ng-container *ngIf="emotion.userId === currentUser?._id; else otherUser">
+          <div class="textContainer">
+            <span class="text">{{ emotion.text_input }}</span>
+            <span class="date">{{ formatDate(emotion.local_time) }}</span>
+          </div>
+          <div class="circle" [style.backgroundColor]="emotionColors[emotion.emotion] || 'gray'">
+            <span class="emoji">{{ emotionEmojis[emotion.emotion] || '😶' }}</span>
+          </div>
+        </ng-container>
+
+        <ng-template #otherUser>
+          <div class="circle" [style.backgroundColor]="emotionColors[emotion.emotion] || 'gray'">
+            <span class="emoji">{{ emotionEmojis[emotion.emotion] || '😶' }}</span>
+          </div>
+          <div class="textContainer">
+            <span class="text">{{ emotion.text_input }}</span>
+            <span class="date">{{ formatDate(emotion.local_time) }}</span>
+          </div>
+        </ng-template>
+
+      </li>
+      <li *ngIf="emotions.length === 0" class="text-center w-100 mt-5">
+        No emotions logged yet.
+      </li>
+    </ul>
+  </div>
+</div>

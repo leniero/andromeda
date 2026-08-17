@@ -1,32 +1,28 @@
-// userController.js
-
+// controllers/userController.js
 const User = require('../models/User');
+const bcrypt = require('bcryptjs');
 
 exports.getCurrentUser = async (req, res) => {
-    try {
-        console.log('Fetching current user');  // Add this line
-        console.log('User ID:', req.user.id);  // Add this line
-        const user = await User.findById(req.user.id).select('-password');
-        if (!user) {
-            return res.status(404).json({ error: 'User not found' });
-        }
-        res.status(200).json(user);
-    } catch (err) {
-        console.error('Detailed error:', err);  // More detailed logging
-        res.status(500).json({ error: 'Error fetching user' });
+  try {
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
     }
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ error: 'Server error' });
+  }
 };
 
 exports.getUser = async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ error: 'User not found' });
     }
     res.status(200).json(user);
-  } catch (err) {
-    console.error('Error fetching user:', err.message); // Log the error message
-    res.status(500).json({ error: 'Error fetching user' });
+  } catch (error) {
+    res.status(500).json({ error: 'Server error' });
   }
 };
 
@@ -34,9 +30,8 @@ exports.updateUser = async (req, res) => {
   try {
     const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
     res.status(200).json(user);
-  } catch (err) {
-    console.error('Error updating user:', err.message); // Log the error message
-    res.status(500).json({ error: 'Error updating user' });
+  } catch (error) {
+    res.status(500).json({ error: 'Server error' });
   }
 };
 
@@ -44,34 +39,25 @@ exports.deleteUser = async (req, res) => {
   try {
     await User.findByIdAndDelete(req.params.id);
     res.status(200).json({ message: 'User deleted successfully' });
-  } catch (err) {
-    console.error('Error deleting user:', err.message); // Log the error message
-    res.status(500).json({ error: 'Error deleting user' });
+  } catch (error) {
+    res.status(500).json({ error: 'Server error' });
   }
 };
 
 exports.changePassword = async (req, res) => {
   try {
-    const userId = req.user.id;
-    const { currentPassword, newPassword } = req.body;
-
-    const user = await User.findById(userId);
+    const user = await User.findById(req.user._id);
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ error: 'User not found' });
     }
-
-    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    const isMatch = await bcrypt.compare(req.body.currentPassword, user.password);
     if (!isMatch) {
-      return res.status(400).json({ message: 'Current password is incorrect' });
+      return res.status(400).json({ error: 'Incorrect current password' });
     }
-
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
-    user.password = hashedPassword;
+    user.password = await bcrypt.hash(req.body.newPassword, 10);
     await user.save();
-
     res.status(200).json({ message: 'Password changed successfully' });
   } catch (error) {
-    console.error('Error changing password:', error);
-    res.status(500).json({ message: 'Server error', error });
+    res.status(500).json({ error: 'Server error' });
   }
 };

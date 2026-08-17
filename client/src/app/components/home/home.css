@@ -1,0 +1,96 @@
+.main {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+}
+
+
+
+.controls-overlay {
+  position: absolute;
+  top: 6rem;
+  right: 2rem;
+  z-index: 10;
+}
+
+.btn-toggle-text {
+  padding: 0.75rem 1.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.btn-toggle-text:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.fab-container {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.form-overlay {
+  width: 320px;
+  max-width: calc(100vw - 4rem);
+}
+
+.btn-fab-circle {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: transparent;
+  border: 4px solid white;
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  padding: 0;
+}
+
+.btn-fab-circle:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.btn-fab-circle.btn-fab-close {
+  background: white;
+  color: black;
+  border-color: white;
+}
+
+.btn-fab-circle.btn-fab-close:hover {
+  background: #e0e0e0;
+}
+
+@media (max-width: 768px) {
+  .brand-overlay {
+    top: 5rem;
+    left: 1rem;
+  }
+  .controls-overlay {
+    top: 5rem;
+    right: 1rem;
+  }
+  .fab-container {
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    right: auto;
+  }
+}

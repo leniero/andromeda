@@ -1,0 +1,16 @@
+<app-emotion-spheres [showText]="showText"></app-emotion-spheres>
+
+<div class="controls-overlay">
+  <button class="btn-toggle-text" (click)="toggleText()">
+    {{ showText ? 'Hide Text' : 'Show Text' }}
+  </button>
+</div>
+
+<div class="fab-container">
+  <div class="form-overlay" *ngIf="isFormVisible">
+    <app-emotion-form></app-emotion-form>
+  </div>
+  <button class="btn-fab-circle" [class.btn-fab-close]="isFormVisible" (click)="toggleForm()">
+    {{ isFormVisible ? '✕' : '+' }}
+  </button>
+</div>

@@ -1,0 +1,46 @@
+import { Component, inject } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AuthService } from '../../services/auth';
+import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+
+@Component({
+  selector: 'app-signup',
+  standalone: true,
+  imports: [ReactiveFormsModule, CommonModule],
+  templateUrl: './signup.html',
+  styleUrls: ['./signup.css'] // using the same CSS structure as login
+})
+export class SignupComponent {
+  signupForm: FormGroup;
+  error: string = '';
+  isSubmitting = false;
+
+  private fb = inject(FormBuilder);
+  private authService = inject(AuthService);
+  private router = inject(Router);
+
+  constructor() {
+    this.signupForm = this.fb.group({
+      username: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', Validators.required]
+    });
+  }
+
+  onSubmit() {
+    if (this.signupForm.valid) {
+      this.isSubmitting = true;
+      this.error = '';
+      this.authService.signup(this.signupForm.value).subscribe({
+        next: () => {
+          this.router.navigate(['/home']);
+        },
+        error: (err) => {
+          this.error = err.error?.error || 'Signup failed';
+          this.isSubmitting = false;
+        }
+      });
+    }
+  }
+}

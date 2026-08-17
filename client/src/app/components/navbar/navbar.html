@@ -1,0 +1,15 @@
+<nav class="navbar glass">
+  <div class="nav-brand" [routerLink]="(authService.isLoggedIn$ | async) ? '/home' : '/'">Andromeda</div>
+  
+  <div class="nav-links">
+    <ng-container *ngIf="authService.isLoggedIn$ | async; else loggedOut">
+      <a routerLink="/emotion-list" routerLinkActive="active">My Entries</a>
+      <a routerLink="/my-account" routerLinkActive="active">Account</a>
+    </ng-container>
+
+    <ng-template #loggedOut>
+      <a routerLink="/login" routerLinkActive="active">Login</a>
+      <a routerLink="/signup" class="btn-primary">Sign Up</a>
+    </ng-template>
+  </div>
+</nav>

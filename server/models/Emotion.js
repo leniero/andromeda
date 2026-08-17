@@ -1,4 +1,4 @@
-// EmotionForm.js
+// Emotion.js
 
 const mongoose = require('mongoose');
 

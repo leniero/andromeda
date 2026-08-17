@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Client</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+<body>
+  <app-root></app-root>
+  <script>
+    window.addEventListener('error', function(e) {
+      const err = document.createElement('div');
+      err.style = 'position:fixed;top:0;left:0;z-index:99999;background:red;color:white;padding:10px;';
+      err.innerText = 'ERROR: ' + e.message;
+      document.body.appendChild(err);
+    });
+    window.addEventListener('unhandledrejection', function(e) {
+      const err = document.createElement('div');
+      err.style = 'position:fixed;top:0;left:0;z-index:99999;background:red;color:white;padding:10px;';
+      err.innerText = 'PROMISE REJECTION: ' + (e.reason && e.reason.message ? e.reason.message : e.reason);
+      document.body.appendChild(err);
+    });
+    const oldError = console.error;
+    console.error = function() {
+      const err = document.createElement('div');
+      err.style = 'position:fixed;top:0;left:0;z-index:99999;background:darkred;color:white;padding:10px;';
+      err.innerText = 'CONSOLE ERROR: ' + Array.from(arguments).join(' ');
+      document.body.appendChild(err);
+      oldError.apply(console, arguments);
+    };
+  </script>
+</body>
+</html>
