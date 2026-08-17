@@ -18,7 +18,7 @@ export interface EmotionData {
 })
 export class EmotionService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:5001/api/emotions';
+  private apiUrl = 'https://andromeda-server.vercel.app/api/emotions';
 
   constructor() {}
 

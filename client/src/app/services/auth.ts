@@ -7,7 +7,7 @@ import { BehaviorSubject, Observable, tap } from 'rxjs';
 })
 export class AuthService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:5001/api/auth';
+  private apiUrl = 'https://andromeda-server.vercel.app/api/auth';
   private tokenKey = 'token';
   
   private loggedInSubject = new BehaviorSubject<boolean>(this.hasToken());
