@@ -17,7 +17,8 @@
   <h2 class="quote-text" *ngIf="selectedEmotion.emotion.text_input">"{{ selectedEmotion.emotion.text_input }}"</h2>
   
   <div class="meta-row">
-    <span class="meta-user">{{ selectedEmotion.emotion.username ? '@' + selectedEmotion.emotion.username : 'Anonymous' }}</span>
+    <span class="meta-user" *ngIf="selectedEmotion.emotion.username">@{{ selectedEmotion.emotion.username }}</span>
+    <span class="meta-user" *ngIf="!selectedEmotion.emotion.username">Anonymous</span>
     <span class="meta-date">{{ formatDate(selectedEmotion.emotion.local_time) }}</span>
     <span class="meta-distance" *ngIf="selectedEmotion.distance !== null">{{ selectedEmotion.distance.toFixed(0) }}km away</span>
   </div>

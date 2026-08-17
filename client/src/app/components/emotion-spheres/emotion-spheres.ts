@@ -155,9 +155,10 @@ export class EmotionSpheresComponent implements AfterViewInit, OnDestroy, OnChan
       const direction = new THREE.Vector3().subVectors(this.camera.position, selectedSphere.position).normalize();
       const zoomDistance = finalSize * 3; // Dynamically zoom based on size
       
-      // Calculate offset so the sphere is centered on the left half of the screen
+      const isMobile = window.innerWidth <= 768;
+      // Calculate offset so the sphere is centered on the left half of the screen (only on desktop)
       const right = new THREE.Vector3().crossVectors(this.camera.up, direction).normalize();
-      const offsetAmount = finalSize * 1.5; // push camera right, sphere goes left
+      const offsetAmount = isMobile ? 0 : finalSize * 1.5; // push camera right, sphere goes left
       
       this.targetOrbitCenter.copy(selectedSphere.position).add(right.clone().multiplyScalar(offsetAmount));
       this.targetCameraPos.copy(selectedSphere.position).add(direction.multiplyScalar(zoomDistance)).add(right.clone().multiplyScalar(offsetAmount));
@@ -384,16 +385,19 @@ export class EmotionSpheresComponent implements AfterViewInit, OnDestroy, OnChan
 
     // Apply the floaty animation to spheres
     this.spheres.forEach(sphere => {
-      const params = sphere.userData['animationParams'];
-      const originalPos = sphere.userData['originalPosition'];
-      const factor = 7.5;
+      // Freeze movement if an emotion is selected
+      if (!this.selectedEmotion) {
+        const params = sphere.userData['animationParams'];
+        const originalPos = sphere.userData['originalPosition'];
+        const factor = 7.5;
 
-      sphere.position.y = originalPos.y + Math.sin(time * params.speed + params.offsetY) * params.amplitudeY * factor;
-      sphere.position.x = originalPos.x + Math.sin(time * params.speed + params.offsetX) * params.amplitudeX * factor;
-      sphere.position.z = originalPos.z + Math.sin(time * params.speed + params.offsetZ) * params.amplitudeZ * factor;
-      
-      sphere.rotation.x += 0.01;
-      sphere.rotation.y += 0.01;
+        sphere.position.y = originalPos.y + Math.sin(time * params.speed + params.offsetY) * params.amplitudeY * factor;
+        sphere.position.x = originalPos.x + Math.sin(time * params.speed + params.offsetX) * params.amplitudeX * factor;
+        sphere.position.z = originalPos.z + Math.sin(time * params.speed + params.offsetZ) * params.amplitudeZ * factor;
+        
+        sphere.rotation.x += 0.01;
+        sphere.rotation.y += 0.01;
+      }
 
       // Update sphere size based on elapsed time
       const size = this.calculateSizeOverTime(sphere.userData['creationTime'], minSize, maxSize);
