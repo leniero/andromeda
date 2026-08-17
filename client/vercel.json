@@ -1,3 +1,6 @@
 {
-  "outputDirectory": "dist/client"
+  "outputDirectory": "dist/client/browser",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
 }
