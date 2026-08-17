@@ -17,7 +17,9 @@ const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:4200',
   'https://andromeda-inky.vercel.app',
-  'https://andromeda-server.vercel.app'
+  'https://andromeda-server.vercel.app',
+  'https://client-pink-three-98.vercel.app',
+  'https://client-sojcrekxn-leandros-projects-ac28bf0b.vercel.app'
 ];
 
 app.use(cors({
