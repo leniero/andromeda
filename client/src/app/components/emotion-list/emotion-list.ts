@@ -41,7 +41,7 @@ export class EmotionListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.emotionService.getEmotions().subscribe({
+    this.emotionService.getUserEmotions().subscribe({
       next: (data) => {
         this.emotions = data;
         this.cdr.detectChanges();

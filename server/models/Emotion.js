@@ -3,6 +3,7 @@
 const mongoose = require('mongoose');
 
 const emotionSchema = new mongoose.Schema({
+    username: String,
     emotion: String,
     text_input: String,
     latitude: Number,

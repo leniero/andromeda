@@ -26,6 +26,10 @@ export class EmotionService {
     return this.http.get<EmotionData[]>(`${this.apiUrl}/get_emotions`);
   }
 
+  getUserEmotions(): Observable<EmotionData[]> {
+    return this.http.get<EmotionData[]>(`${this.apiUrl}/get_user_emotions`);
+  }
+
   logEmotion(data: EmotionData): Observable<EmotionData> {
     return this.http.post<EmotionData>(`${this.apiUrl}/submit`, data);
   }

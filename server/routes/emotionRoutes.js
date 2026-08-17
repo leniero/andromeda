@@ -4,6 +4,7 @@ const express = require('express');
 const router = express.Router();
 const Emotion = require('../models/Emotion');
 const UserEmotion = require('../models/UserEmotion');
+const User = require('../models/User');
 const auth = require('../middleware/auth'); // Middleware to check authentication
 
 // Submit an emotion (accessible to both logged-in and non-logged-in users)
@@ -11,8 +12,17 @@ router.post('/submit', auth.optional, async (req, res) => {
   try {
     const { emotion, text_input, latitude, longitude } = req.body;
 
+    let username = undefined;
+    if (req.user) {
+      const userDoc = await User.findById(req.user._id);
+      if (userDoc) {
+        username = userDoc.username;
+      }
+    }
+
     // Save to the collective emotions collection
     const newEmotion = new Emotion({
+      username,
       emotion,
       text_input,
       latitude,

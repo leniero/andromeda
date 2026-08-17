@@ -6,25 +6,18 @@
         class="emotionItem" 
         [ngClass]="{'myEmotion': emotion.userId === currentUser?._id}">
         
-        <ng-container *ngIf="emotion.userId === currentUser?._id; else otherUser">
+        <ng-container *ngIf="true">
           <div class="textContainer">
             <span class="text">{{ emotion.text_input }}</span>
             <span class="date">{{ formatDate(emotion.local_time) }}</span>
           </div>
-          <div class="circle" [style.backgroundColor]="emotionColors[emotion.emotion] || 'gray'">
-            <span class="emoji">{{ emotionEmojis[emotion.emotion] || '😶' }}</span>
+          <div class="emotion-icon-container">
+            <div class="circle" [style.backgroundColor]="emotionColors[emotion.emotion] || 'gray'">
+              <span class="emoji">{{ emotionEmojis[emotion.emotion] || '😶' }}</span>
+            </div>
+            <span class="emotion-title">{{ emotion.emotion }}</span>
           </div>
         </ng-container>
-
-        <ng-template #otherUser>
-          <div class="circle" [style.backgroundColor]="emotionColors[emotion.emotion] || 'gray'">
-            <span class="emoji">{{ emotionEmojis[emotion.emotion] || '😶' }}</span>
-          </div>
-          <div class="textContainer">
-            <span class="text">{{ emotion.text_input }}</span>
-            <span class="date">{{ formatDate(emotion.local_time) }}</span>
-          </div>
-        </ng-template>
 
       </li>
       <li *ngIf="emotions.length === 0" class="text-center w-100 mt-5">

@@ -1,1 +1,24 @@
-<div #rendererContainer class="visualization-container"></div>
+<div #container class="visualization-wrapper" [class.blurred]="!!selectedEmotion">
+  <canvas #bgCanvas class="bg-canvas"></canvas>
+  <canvas #fgCanvas class="fg-canvas"></canvas>
+</div>
+
+<div class="emotion-detail-overlay floating-text" 
+     *ngIf="selectedEmotion" 
+     [class.visible]="!!selectedEmotion"
+     [style.left.px]="overlayX"
+     [style.top.px]="overlayY">
+  
+  <div class="header-row">
+    <div class="emoji-icon">{{ emotionEmojis[selectedEmotion.emotion.emotion] || '😶' }}</div>
+    <h1 class="emotion-title">{{ selectedEmotion.emotion.emotion | lowercase }}</h1>
+  </div>
+  
+  <h2 class="quote-text" *ngIf="selectedEmotion.emotion.text_input">"{{ selectedEmotion.emotion.text_input }}"</h2>
+  
+  <div class="meta-row">
+    <span class="meta-user">{{ selectedEmotion.emotion.username ? '@' + selectedEmotion.emotion.username : 'Anonymous' }}</span>
+    <span class="meta-date">{{ formatDate(selectedEmotion.emotion.local_time) }}</span>
+    <span class="meta-distance" *ngIf="selectedEmotion.distance !== null">{{ selectedEmotion.distance.toFixed(0) }}km away</span>
+  </div>
+</div>

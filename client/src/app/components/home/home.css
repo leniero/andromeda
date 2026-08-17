@@ -1,7 +1,7 @@
 .main {
   position: relative;
   width: 100vw;
-  height: 100vh;
+  height: 100dvh;
 }
 
 
@@ -84,7 +84,7 @@
     left: 1rem;
   }
   .controls-overlay {
-    top: 5rem;
+    top: 4.5rem;
     right: 1rem;
   }
   .fab-container {

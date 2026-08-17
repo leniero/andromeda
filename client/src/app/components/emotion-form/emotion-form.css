@@ -35,6 +35,9 @@ input, select {
   outline: none;
   transition: border-color 0.2s;
   width: 100%;
+  appearance: none;
+  -webkit-appearance: none;
+  min-height: 48px;
 }
 
 input:focus, select:focus {

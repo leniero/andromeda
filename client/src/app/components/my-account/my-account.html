@@ -1,6 +1,6 @@
 <div class="auth-container">
   <div class="glass-card">
-    <h2>My Account</h2>
+    <h2>{{ user?.username ? '@' + user.username : 'My Account' }}</h2>
     
     <div class="profile-info" *ngIf="user; else loading">
       <div class="account-info" style="display: flex; flex-direction: column; gap: 1rem;">

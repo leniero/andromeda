@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { EmotionService, EmotionData } from '../../services/emotion';
+import { LocationService } from '../../services/location';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -15,6 +16,7 @@ export class EmotionFormComponent {
   isSubmitting = false;
   private fb = inject(FormBuilder);
   private emotionService = inject(EmotionService);
+  private locationService = inject(LocationService);
 
   emotions = ['Anger', 'Contempt', 'Disgust', 'Envy', 'Guilt', 'Shame', 'Fear', 'Sadness', 'Surprise', 'Interest', 'Hope', 'Relief', 'Satisfaction', 'Joy', 'Elation', 'Pride'];
 
@@ -45,11 +47,14 @@ export class EmotionFormComponent {
       latitude: [0, Validators.required],
       longitude: [0, Validators.required]
     });
-    
-    // Auto-fill random coordinates for easy local testing
-    this.emotionForm.patchValue({
-      latitude: (Math.random() * 180) - 90,
-      longitude: (Math.random() * 360) - 180
+  }
+
+  ngOnInit() {
+    this.locationService.getLocation().then(loc => {
+      this.emotionForm.patchValue({
+        latitude: loc.latitude,
+        longitude: loc.longitude
+      });
     });
   }
 

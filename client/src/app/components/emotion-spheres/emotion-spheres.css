@@ -1,8 +1,112 @@
-.visualization-container {
+.visualization-wrapper {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   z-index: 1;
+}
+
+.bg-canvas, .fg-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.bg-canvas {
+  z-index: 1;
+  transition: filter 0.5s ease, opacity 0.5s ease;
+}
+
+.visualization-wrapper.blurred .bg-canvas {
+  filter: blur(15px) brightness(0.4);
+}
+
+.fg-canvas {
+  z-index: 2;
+  pointer-events: none; /* Let clicks pass through to wrapper */
+}
+
+.floating-text {
+  position: absolute;
+  z-index: 50;
+  pointer-events: none;
+  color: white;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  transform: translateY(-50%); /* Centered vertically relative to sphere */
+  width: 600px; /* Give it enough space */
+}
+
+.floating-text.visible {
+  opacity: 1;
+}
+
+.header-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.emoji-icon {
+  font-size: 3rem;
+  line-height: 1;
+}
+
+.emotion-title {
+  margin: 0;
+  font-size: 3.5rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.quote-text {
+  font-size: 1.5rem;
+  font-weight: 400;
+  margin: 0 0 0.5rem 0;
+}
+
+.meta-row {
+  display: flex;
+  gap: 1rem;
+  font-size: 1rem;
+  opacity: 0.8;
+}
+
+.detail-time {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.detail-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.detail-text {
+  font-size: 1rem;
+  margin: 0;
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.9);
+  padding: 0.5rem;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+}
+
+.detail-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+}
+
+.meta-label {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.meta-value {
+  font-weight: 600;
 }
