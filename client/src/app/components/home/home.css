@@ -32,7 +32,7 @@
 
 .fab-container {
   position: absolute;
-  bottom: 2rem;
+  bottom: 3rem;
   left: 50%;
   transform: translateX(-50%);
   z-index: 20;
@@ -88,7 +88,7 @@
     right: 1rem;
   }
   .fab-container {
-    bottom: 1rem;
+    bottom: 2.5rem;
     left: 50%;
     transform: translateX(-50%);
     right: auto;

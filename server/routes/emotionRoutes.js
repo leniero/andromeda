@@ -70,4 +70,29 @@ router.get('/get_user_emotions', auth.required, async (req, res) => {
   }
 });
 
+// Delete an emotion entry
+router.delete('/:id', auth.required, async (req, res) => {
+  try {
+    const userEmotion = await UserEmotion.findOne({ _id: req.params.id, userId: req.user._id });
+    if (!userEmotion) {
+      return res.status(404).json({ error: 'Emotion not found' });
+    }
+    
+    // Find and delete the corresponding public Emotion
+    await Emotion.findOneAndDelete({
+      emotion: userEmotion.emotion,
+      text_input: userEmotion.text_input,
+      latitude: userEmotion.latitude,
+      longitude: userEmotion.longitude,
+      local_time: userEmotion.local_time
+    });
+
+    await UserEmotion.findByIdAndDelete(req.params.id);
+    
+    res.status(200).json({ message: 'Emotion deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
 module.exports = router;

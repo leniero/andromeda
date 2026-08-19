@@ -1,6 +1,7 @@
 import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { EmotionService, EmotionData } from '../../services/emotion';
 import { AuthService } from '../../services/auth';
+import { LocationService } from '../../services/location';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -13,8 +14,11 @@ import { CommonModule } from '@angular/common';
 export class EmotionListComponent implements OnInit {
   emotions: EmotionData[] = [];
   currentUser: any = null;
+  deletingId: string | null = null;
+  deleteSuccess: boolean = false;
   private emotionService = inject(EmotionService);
   private authService = inject(AuthService);
+  private locationService = inject(LocationService);
   private cdr = inject(ChangeDetectorRef);
 
   emotionColors: { [key: string]: string } = {
@@ -42,8 +46,23 @@ export class EmotionListComponent implements OnInit {
 
   ngOnInit() {
     this.emotionService.getUserEmotions().subscribe({
-      next: (data) => {
+      next: async (data) => {
         this.emotions = data;
+        
+        try {
+          const loc = await this.locationService.getLocation();
+          this.emotions.forEach(emotion => {
+            if (emotion.latitude && emotion.longitude) {
+              (emotion as any).distance = this.locationService.calculateDistance(
+                loc.latitude, loc.longitude,
+                emotion.latitude, emotion.longitude
+              );
+            }
+          });
+        } catch (e) {
+          console.warn('Could not get location for distances');
+        }
+        
         this.cdr.detectChanges();
       },
       error: (err) => console.error(err)
@@ -56,11 +75,36 @@ export class EmotionListComponent implements OnInit {
           this.cdr.detectChanges();
         },
         error: (err) => {
-          // Instead of console.error which triggers the red banner, just warn or silently fail
           console.warn('Could not fetch user profile, they might need to login again.');
-          // Optionally logout: this.authService.logout();
         }
       });
     }
+  }
+
+  confirmDelete(id: string | undefined) {
+    if (id) {
+      this.deletingId = id;
+    }
+  }
+
+  cancelDelete() {
+    this.deletingId = null;
+  }
+
+  deleteEntry(id: string | undefined) {
+    if (!id) return;
+    this.emotionService.deleteEmotion(id).subscribe({
+      next: () => {
+        this.emotions = this.emotions.filter(e => e._id !== id);
+        this.deletingId = null;
+        this.deleteSuccess = true;
+        this.cdr.detectChanges();
+        setTimeout(() => {
+          this.deleteSuccess = false;
+          this.cdr.detectChanges();
+        }, 3000);
+      },
+      error: (err) => console.error('Failed to delete entry', err)
+    });
   }
 }

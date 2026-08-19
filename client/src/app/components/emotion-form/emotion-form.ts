@@ -39,11 +39,13 @@ export class EmotionFormComponent {
   get selectedColor() { return this.selectedEmotion ? this.emotionColors[this.selectedEmotion] : ''; }
 
   successMessage = '';
+  randomDelay = '0s';
 
   constructor() {
+    this.randomDelay = `-${Math.random() * 4}s`;
     this.emotionForm = this.fb.group({
       emotion: ['', Validators.required],
-      reason: ['', Validators.maxLength(150)],
+      reason: ['', [Validators.required, Validators.maxLength(150)]],
       latitude: [0, Validators.required],
       longitude: [0, Validators.required]
     });

@@ -11,6 +11,7 @@ export interface EmotionData {
   longitude: number;
   local_time: string;
   text_input?: string;
+  distance?: number;
 }
 
 @Injectable({
@@ -18,7 +19,8 @@ export interface EmotionData {
 })
 export class EmotionService {
   private http = inject(HttpClient);
-  private apiUrl = 'https://andromeda-server.vercel.app/api/emotions';
+  private isLocal = typeof window !== 'undefined' && window.location.hostname === 'localhost';
+  private apiUrl = this.isLocal ? 'http://localhost:5001/api/emotions' : 'https://andromeda-server.vercel.app/api/emotions';
 
   constructor() {}
 
@@ -32,5 +34,9 @@ export class EmotionService {
 
   logEmotion(data: EmotionData): Observable<EmotionData> {
     return this.http.post<EmotionData>(`${this.apiUrl}/submit`, data);
+  }
+
+  deleteEmotion(emotionId: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${emotionId}`);
   }
 }

@@ -1,6 +1,8 @@
 <nav class="navbar glass">
-  <div class="nav-brand" [routerLink]="(authService.isLoggedIn$ | async) ? '/home' : '/'">Andromeda</div>
-  
+  <a class="nav-brand" [routerLink]="(authService.isLoggedIn$ | async) ? '/home' : '/'" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+    <img class="logo-unselected" src="logo%20white.svg" alt="Andromeda">
+    <img class="logo-selected" src="logo%20color.svg" alt="Andromeda">
+  </a>
   <div class="nav-links">
     <ng-container *ngIf="authService.isLoggedIn$ | async; else loggedOut">
       <a routerLink="/emotion-list" routerLinkActive="active">My Entries</a>

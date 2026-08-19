@@ -7,7 +7,8 @@ import { BehaviorSubject, Observable, tap } from 'rxjs';
 })
 export class AuthService {
   private http = inject(HttpClient);
-  private apiUrl = 'https://andromeda-server.vercel.app/api/auth';
+  private isLocal = typeof window !== 'undefined' && window.location.hostname === 'localhost';
+  private apiUrl = this.isLocal ? 'http://localhost:5001/api/auth' : 'https://andromeda-server.vercel.app/api/auth';
   private tokenKey = 'token';
   
   private loggedInSubject = new BehaviorSubject<boolean>(this.hasToken());
@@ -60,5 +61,15 @@ export class AuthService {
 
   changePassword(data: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/change-password`, data);
+  }
+
+  updateUser(userId: string, data: any): Observable<any> {
+    const userApiUrl = this.isLocal ? 'http://localhost:5001/api/users' : 'https://andromeda-server.vercel.app/api/users';
+    return this.http.put(`${userApiUrl}/${userId}`, data);
+  }
+
+  deleteUser(userId: string): Observable<any> {
+    const userApiUrl = this.isLocal ? 'http://localhost:5001/api/users' : 'https://andromeda-server.vercel.app/api/users';
+    return this.http.delete(`${userApiUrl}/${userId}`);
   }
 }

@@ -16,7 +16,7 @@
       <input type="text" formControlName="reason" placeholder="Why are you feeling this way?">
     </div>
 
-    <button type="submit" [disabled]="emotionForm.invalid || isSubmitting" [class.tinted]="!!selectedColor">
+    <button type="submit" [disabled]="emotionForm.invalid || isSubmitting" [class.tinted]="!!selectedColor" [class.rainbow-gradient]="!selectedEmotion" [style.animationDelay]="randomDelay">
       {{ isSubmitting ? 'Logging...' : 'Log emotion' }}
     </button>
   </ng-container>
