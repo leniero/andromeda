@@ -110,3 +110,14 @@
 .meta-value {
   font-weight: 600;
 }
+
+@media (max-width: 768px) {
+  .floating-text {
+    left: 1.5rem !important;
+    right: 1.5rem !important;
+    top: auto !important;
+    bottom: 5% !important;
+    transform: none !important;
+    width: auto !important;
+  }
+}

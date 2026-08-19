@@ -153,15 +153,31 @@ export class EmotionSpheresComponent implements AfterViewInit, OnDestroy, OnChan
       const finalSize = size * densityFactor;
       
       const direction = new THREE.Vector3().subVectors(this.camera.position, selectedSphere.position).normalize();
-      const zoomDistance = finalSize * 3; // Dynamically zoom based on size
       
       const isMobile = window.innerWidth <= 768;
-      // Calculate offset so the sphere is centered on the left half of the screen (only on desktop)
       const right = new THREE.Vector3().crossVectors(this.camera.up, direction).normalize();
-      const offsetAmount = isMobile ? 0 : finalSize * 1.5; // push camera right, sphere goes left
+      const up = new THREE.Vector3().crossVectors(direction, right).normalize();
       
-      this.targetOrbitCenter.copy(selectedSphere.position).add(right.clone().multiplyScalar(offsetAmount));
-      this.targetCameraPos.copy(selectedSphere.position).add(direction.multiplyScalar(zoomDistance)).add(right.clone().multiplyScalar(offsetAmount));
+      let rightOffsetAmount = 0;
+      let upOffsetAmount = 0;
+      let zoomDistance = finalSize * 3.8;
+      
+      if (isMobile) {
+        upOffsetAmount = -finalSize * 1.0;
+        zoomDistance = finalSize * 4.5;
+      } else {
+        rightOffsetAmount = finalSize * 1.5;
+        zoomDistance = finalSize * 3.8;
+      }
+      
+      this.targetOrbitCenter.copy(selectedSphere.position)
+        .add(right.clone().multiplyScalar(rightOffsetAmount))
+        .add(up.clone().multiplyScalar(upOffsetAmount));
+        
+      this.targetCameraPos.copy(selectedSphere.position)
+        .add(direction.multiplyScalar(zoomDistance))
+        .add(right.clone().multiplyScalar(rightOffsetAmount))
+        .add(up.clone().multiplyScalar(upOffsetAmount));
       
       this.isCameraAnimating = true;
 
@@ -385,8 +401,10 @@ export class EmotionSpheresComponent implements AfterViewInit, OnDestroy, OnChan
 
     // Apply the floaty animation to spheres
     this.spheres.forEach(sphere => {
-      // Freeze movement if an emotion is selected
-      if (!this.selectedEmotion) {
+      const isSelected = this.selectedEmotion && sphere.userData['emotion']?._id === this.selectedEmotion.emotion._id;
+
+      // Freeze floaty movement if an emotion is selected, BUT STILL ROTATE IT
+      if (!isSelected) {
         const params = sphere.userData['animationParams'];
         const originalPos = sphere.userData['originalPosition'];
         const factor = 7.5;
@@ -394,10 +412,10 @@ export class EmotionSpheresComponent implements AfterViewInit, OnDestroy, OnChan
         sphere.position.y = originalPos.y + Math.sin(time * params.speed + params.offsetY) * params.amplitudeY * factor;
         sphere.position.x = originalPos.x + Math.sin(time * params.speed + params.offsetX) * params.amplitudeX * factor;
         sphere.position.z = originalPos.z + Math.sin(time * params.speed + params.offsetZ) * params.amplitudeZ * factor;
-        
-        sphere.rotation.x += 0.01;
-        sphere.rotation.y += 0.01;
       }
+      
+      sphere.rotation.x += 0.01;
+      sphere.rotation.y += 0.01;
 
       // Update sphere size based on elapsed time
       const size = this.calculateSizeOverTime(sphere.userData['creationTime'], minSize, maxSize);
@@ -457,14 +475,24 @@ export class EmotionSpheresComponent implements AfterViewInit, OnDestroy, OnChan
     if (this.selectedEmotion) {
       const selectedSphere = this.spheres.find(s => s.userData['emotion']?._id === this.selectedEmotion.emotion._id);
       if (selectedSphere) {
-        const vector = selectedSphere.position.clone();
-        vector.project(this.camera);
+        const isMobile = window.innerWidth <= 768;
         
-        const x = (vector.x * 0.5 + 0.5) * window.innerWidth;
-        const y = -(vector.y * 0.5 - 0.5) * window.innerHeight;
+        const size = this.calculateSizeOverTime(selectedSphere.userData['creationTime'], 400, 2000);
+        const densityFactor = 0.5 / Math.sqrt(selectedSphere.userData['density'] || 1);
+        const finalSize = size * densityFactor;
+
+        const centerVector = selectedSphere.position.clone();
+        const direction = new THREE.Vector3().subVectors(this.camera.position, selectedSphere.position).normalize();
+        const right = new THREE.Vector3().crossVectors(this.camera.up, direction).normalize();
         
-        // Offset text slightly to the right of the sphere
-        this.overlayX = x + 100;
+        // Offset text to the right edge of the sphere in 3D
+        const rightEdgePos = centerVector.clone().add(right.multiplyScalar(finalSize * 1.2));
+        rightEdgePos.project(this.camera);
+        
+        const x = (rightEdgePos.x * 0.5 + 0.5) * window.innerWidth;
+        const y = -(rightEdgePos.y * 0.5 - 0.5) * window.innerHeight;
+        
+        this.overlayX = isMobile ? 0 : x;
         this.overlayY = y;
         this.cdr.detectChanges();
       }
