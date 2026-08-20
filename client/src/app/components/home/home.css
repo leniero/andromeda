@@ -11,7 +11,7 @@
 
 .controls-overlay {
   position: absolute;
-  top: 6rem;
+  top: calc(6rem + env(safe-area-inset-top, 0px));
   right: 2rem;
   z-index: 10;
 }
@@ -87,7 +87,7 @@
     left: 1rem;
   }
   .controls-overlay {
-    top: 4.5rem;
+    top: calc(4.5rem + env(safe-area-inset-top, 0px));
     right: 1rem;
   }
   .fab-container {
