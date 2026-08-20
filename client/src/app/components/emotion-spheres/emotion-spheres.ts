@@ -165,8 +165,8 @@ export class EmotionSpheresComponent implements AfterViewInit, OnDestroy, OnChan
   }
 
   private initThreeJS(): void {
-    const width = window.innerWidth;
-    const height = window.innerHeight;
+    const width = this.containerRef.nativeElement.clientWidth;
+    const height = this.containerRef.nativeElement.clientHeight;
 
     this.scene = new THREE.Scene();
     
@@ -196,10 +196,12 @@ export class EmotionSpheresComponent implements AfterViewInit, OnDestroy, OnChan
   }
 
   private onWindowResize = () => {
-    this.camera.aspect = window.innerWidth / window.innerHeight;
+    const width = this.containerRef.nativeElement.clientWidth;
+    const height = this.containerRef.nativeElement.clientHeight;
+    this.camera.aspect = width / height;
     this.camera.updateProjectionMatrix();
-    this.bgRenderer.setSize(window.innerWidth, window.innerHeight);
-    this.fgRenderer.setSize(window.innerWidth, window.innerHeight);
+    this.bgRenderer.setSize(width, height);
+    this.fgRenderer.setSize(width, height);
   }
 
   private onPointerDown = (event: PointerEvent) => {
