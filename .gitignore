@@ -148,3 +148,4 @@ ignore.md
 db-helpers/
 
 .vscode
+.vercel

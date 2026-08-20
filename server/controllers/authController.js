@@ -33,7 +33,7 @@ exports.signup = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new User({ username, email, password: hashedPassword });
     await newUser.save();
-    const token = jwt.sign({ _id: newUser._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign({ _id: newUser._id }, process.env.JWT_SECRET, { expiresIn: '30d' });
     res.status(201).json({ message: 'User created successfully', token });
   } catch (error) {
     console.error('Error during signup:', error);
@@ -59,7 +59,7 @@ exports.loginUser = async (req, res) => {
       _id: user.id
     };
 
-    jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' }, (err, token) => {
+    jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '30d' }, (err, token) => {
       if (err) throw err;
       res.json({ token });
     });

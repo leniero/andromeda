@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, OnDestroy, ViewChild, AfterViewInit, inject, Input, OnChanges, SimpleChanges, HostListener, ChangeDetectorRef } from '@angular/core';
+import { Component, ElementRef, OnInit, OnDestroy, ViewChild, AfterViewInit, inject, Input, Output, EventEmitter, OnChanges, SimpleChanges, HostListener, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -19,6 +19,7 @@ export class EmotionSpheresComponent implements AfterViewInit, OnDestroy, OnChan
   @ViewChild('bgCanvas', { static: true }) bgCanvasRef!: ElementRef<HTMLCanvasElement>;
   @ViewChild('fgCanvas', { static: true }) fgCanvasRef!: ElementRef<HTMLCanvasElement>;
   @Input() showText: boolean = true;
+  @Output() emotionSelected = new EventEmitter<boolean>();
 
   selectedEmotion: any = null;
   overlayX: number = 0;
@@ -286,6 +287,7 @@ export class EmotionSpheresComponent implements AfterViewInit, OnDestroy, OnChan
         emotion: emotionData,
         distance: dist
       };
+      this.emotionSelected.emit(true);
       
       // Move selected to layer 1 for sharp rendering
       this.spheres.forEach(s => s.layers.set(0));
@@ -320,6 +322,7 @@ export class EmotionSpheresComponent implements AfterViewInit, OnDestroy, OnChan
 
   public closeDetail() {
     this.selectedEmotion = null;
+    this.emotionSelected.emit(false);
     this.targetCameraPos.set(0, 0, 4000);
     this.targetOrbitCenter.set(0, 0, 0);
     this.isCameraAnimating = true;

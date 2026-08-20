@@ -1,6 +1,6 @@
-<app-emotion-spheres [showText]="showText"></app-emotion-spheres>
+<app-emotion-spheres [showText]="showText" (emotionSelected)="onEmotionSelected($event)"></app-emotion-spheres>
 
-<div class="controls-overlay">
+<div class="controls-overlay" *ngIf="!isZoomed">
   <button class="btn-toggle-text" (click)="toggleText()">
     {{ showText ? 'Hide Text' : 'Show Text' }}
   </button>

@@ -15,6 +15,11 @@ export class HomeComponent {
   @ViewChild('fabContainer') fabContainer!: ElementRef;
   showText = true;
   isFormVisible = false;
+  isZoomed = false;
+
+  onEmotionSelected(isZoomed: boolean) {
+    this.isZoomed = isZoomed;
+  }
 
   toggleText() {
     this.showText = !this.showText;
