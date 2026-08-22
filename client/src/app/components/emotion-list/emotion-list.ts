@@ -37,11 +37,16 @@ export class EmotionListComponent implements OnInit {
   };
 
   formatDate(dateString: string): string {
-    const options: Intl.DateTimeFormatOptions = { 
-      year: 'numeric', month: '2-digit', day: '2-digit', 
-      hour: '2-digit', minute: '2-digit' 
-    };
-    return new Date(dateString).toLocaleDateString(undefined, options);
+    const d = new Date(dateString);
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    return `${d.getDate()} ${months[d.getMonth()]}, ${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}`;
+  }
+
+  getOrbitText(emotion: string): string {
+    const word = emotion.toUpperCase() + ' • ';
+    if (word.length > 10) return word.repeat(2);
+    if (word.length > 6) return word.repeat(3);
+    return word.repeat(4);
   }
 
   ngOnInit() {

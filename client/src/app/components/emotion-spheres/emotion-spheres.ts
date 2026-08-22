@@ -198,7 +198,8 @@ export class EmotionSpheresComponent implements AfterViewInit, OnDestroy, OnChan
     this.fgRenderer.setSize(width, height);
 
     this.orbitControls = new OrbitControls(this.camera, this.containerRef.nativeElement);
-    this.orbitControls.enableDamping = false;
+    this.orbitControls.enableDamping = true;
+    this.orbitControls.dampingFactor = 0.05;
     
     // Stop camera animation if user starts dragging
     this.orbitControls.addEventListener('start', () => {
@@ -247,9 +248,7 @@ export class EmotionSpheresComponent implements AfterViewInit, OnDestroy, OnChan
       const selectedSphere = intersects[0].object as THREE.Mesh;
       const emotionData = selectedSphere.userData['emotion'];
       
-      const size = this.calculateSizeOverTime(selectedSphere.userData['creationTime'], 400, 2000);
-      const densityFactor = 0.5 / Math.sqrt(selectedSphere.userData['density'] || 1);
-      const finalSize = size * densityFactor;
+      const finalSize = selectedSphere.userData['currentSize'] || 350;
       
       const direction = new THREE.Vector3().subVectors(this.camera.position, selectedSphere.position).normalize();
       
@@ -462,6 +461,7 @@ export class EmotionSpheresComponent implements AfterViewInit, OnDestroy, OnChan
       
       textGroup.userData = { sphere, rotationSpeed: -0.01, originalScale: 1.0, emotionId: emotion._id };
       textGroup.position.copy(sphere.position);
+      textGroup.visible = this.showText;
       this.scene.add(textGroup);
       this.textGroups.push(textGroup);
     });
@@ -637,28 +637,88 @@ export class EmotionSpheresComponent implements AfterViewInit, OnDestroy, OnChan
     const minSize = 400;
     const maxSize = 2000;
 
-    // Apply the floaty animation to spheres
+    const globeRadius = 1000;
+
+    // Physics Step: Calculate repulsive forces
+    for (let i = 0; i < this.spheres.length; i++) {
+      const s1 = this.spheres[i];
+      if (!s1.userData['velocity']) s1.userData['velocity'] = new THREE.Vector3();
+      
+      const isSelected1 = this.selectedEmotion && s1.userData['emotion']?._id === this.selectedEmotion.emotion._id;
+      if (isSelected1) continue;
+      
+      const params = s1.userData['animationParams'];
+      const originalPos = s1.userData['originalPosition'];
+      const factor = 7.5;
+
+      // Calculate floaty GPS position
+      const floatyTarget = new THREE.Vector3(
+        originalPos.x + Math.sin(time * params.speed + params.offsetX) * params.amplitudeX * factor,
+        originalPos.y + Math.sin(time * params.speed + params.offsetY) * params.amplitudeY * factor,
+        originalPos.z + Math.sin(time * params.speed + params.offsetZ) * params.amplitudeZ * factor
+      );
+      floatyTarget.normalize().multiplyScalar(globeRadius);
+      
+      // Spring force pulling toward floaty target (very gentle)
+      const springForce = new THREE.Vector3().subVectors(floatyTarget, s1.position).multiplyScalar(0.001);
+      s1.userData['velocity'].add(springForce);
+
+      // Collision Repulsion
+      for (let j = i + 1; j < this.spheres.length; j++) {
+        const s2 = this.spheres[j];
+        const isSelected2 = this.selectedEmotion && s2.userData['emotion']?._id === this.selectedEmotion.emotion._id;
+        if (isSelected2) continue;
+        
+        if (!s2.userData['velocity']) s2.userData['velocity'] = new THREE.Vector3();
+        
+        let distSq = s1.position.distanceToSquared(s2.position);
+        
+        // Break perfect overlaps with microscopic jitter
+        if (distSq === 0) {
+          s1.position.x += (Math.random() - 0.5) * 1;
+          s1.position.y += (Math.random() - 0.5) * 1;
+          s1.position.z += (Math.random() - 0.5) * 1;
+          s1.position.normalize().multiplyScalar(globeRadius);
+          distSq = s1.position.distanceToSquared(s2.position);
+        }
+        
+        const size1 = s1.userData['currentSize'] || 500;
+        const size2 = s2.userData['currentSize'] || 500;
+        // Collision threshold: sum of radii (scaled for text breathing room)
+        const minSpace = (size1 + size2) * 1.5; 
+        const minSpaceSq = minSpace * minSpace;
+        
+        if (distSq > 0 && distSq < minSpaceSq) {
+          const dist = Math.sqrt(distSq);
+          // Push force increases dramatically as they get closer
+          const pushForce = ((minSpace - dist) / minSpace) * 10.0;
+          const pushVec = new THREE.Vector3().subVectors(s1.position, s2.position).normalize().multiplyScalar(pushForce);
+          
+          s1.userData['velocity'].add(pushVec);
+          s2.userData['velocity'].sub(pushVec);
+        }
+      }
+    }
+
+    // Apply Physics and Update Scale
     this.spheres.forEach(sphere => {
       const isSelected = this.selectedEmotion && sphere.userData['emotion']?._id === this.selectedEmotion.emotion._id;
 
-      // Freeze floaty movement if an emotion is selected, BUT STILL ROTATE IT
-      if (!isSelected) {
-        const params = sphere.userData['animationParams'];
-        const originalPos = sphere.userData['originalPosition'];
-        const factor = 7.5;
-
-        sphere.position.y = originalPos.y + Math.sin(time * params.speed + params.offsetY) * params.amplitudeY * factor;
-        sphere.position.x = originalPos.x + Math.sin(time * params.speed + params.offsetX) * params.amplitudeX * factor;
-        sphere.position.z = originalPos.z + Math.sin(time * params.speed + params.offsetZ) * params.amplitudeZ * factor;
+      if (!isSelected && sphere.userData['velocity']) {
+        sphere.userData['velocity'].multiplyScalar(0.85); // Damping
+        sphere.position.add(sphere.userData['velocity']);
+        sphere.position.normalize().multiplyScalar(globeRadius); // Snap to surface
       }
       
       sphere.rotation.x += 0.01;
       sphere.rotation.y += 0.01;
 
-      // Update sphere size based on elapsed time
+      // Update sphere size based on elapsed time (older = smaller)
       const size = this.calculateSizeOverTime(sphere.userData['creationTime'], minSize, maxSize);
-      const densityFactor = 0.5 / Math.sqrt(sphere.userData['density'] || 1);
+      const densityFactor = 0.15; // Fixed scalar instead of dynamic crowding
       const finalSize = size * densityFactor;
+      sphere.userData['currentSize'] = finalSize;
+      
       sphere.scale.set(finalSize / maxSize, finalSize / maxSize, finalSize / maxSize);
 
       // Update the corresponding text group size
@@ -791,9 +851,7 @@ export class EmotionSpheresComponent implements AfterViewInit, OnDestroy, OnChan
       if (selectedSphere) {
         const isMobile = window.innerWidth <= 768;
         
-        const size = this.calculateSizeOverTime(selectedSphere.userData['creationTime'], 400, 2000);
-        const densityFactor = 0.5 / Math.sqrt(selectedSphere.userData['density'] || 1);
-        const finalSize = size * densityFactor;
+        const finalSize = selectedSphere.userData['currentSize'] || 350;
 
         const centerVector = selectedSphere.position.clone();
         const direction = new THREE.Vector3().subVectors(this.camera.position, selectedSphere.position).normalize();

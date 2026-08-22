@@ -25,46 +25,78 @@
 
 .emotionItem {
   display: flex;
-  align-items: flex-start;
-  margin: 10px 0;
+  align-items: center;
+  gap: 12px;
+  margin: 10px 0 20px 0;
   padding: 10px;
   border-radius: 10px;
   background-color: transparent;
   position: relative;
-  gap: 20px;
+  transition: opacity 0.3s ease, margin-bottom 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .emotion-icon-container {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 8px;
-  width: 100px;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
   flex-shrink: 0;
 }
 
+.orbit-container {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hanging-container {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.orbit-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  animation: spin 15s linear infinite;
+  z-index: 1;
+}
+
+.orbit-text {
+  font-size: 15px;
+  fill: rgba(255, 255, 255, 0.8);
+  font-weight: 600;
+  letter-spacing: 2px;
+}
+
+@keyframes spin {
+  100% { transform: rotate(360deg); }
+}
+
 .circle {
-  width: 60px;
-  height: 60px;
+  width: 45px;
+  height: 45px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-}
-
-.emotion-title {
-  font-size: 0.75em;
-  font-weight: 500;
-  text-transform: capitalize;
-  text-align: center;
-  width: 100%;
-  word-wrap: break-word;
+  z-index: 2;
 }
 
 .emoji {
-  font-size: 2.5em;
-  line-height: 60px;
+  font-size: 1.5em;
+  line-height: 45px;
   vertical-align: middle;
   text-align: center;
   display: inline-block;
@@ -74,20 +106,18 @@
 .textContainer {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: flex-end;
   flex: 1;
+  position: relative;
 }
 
 .text {
-  font-size: 1.0em;
+  font-size: 0.9em;
   background-color: #888;
   padding: 15px;
   border-radius: 8px;
   text-align: left;
   width: 100%;
   box-sizing: border-box;
-  margin-bottom: 5px;
 }
 
 .meta-row {
@@ -95,6 +125,10 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
+}
+
+.delete-confirm {
+  margin-top: 6px;
 }
 
 .date-group {
@@ -105,10 +139,11 @@
 
 .date {
   font-size: 0.8em;
-  color: #ddd;
+  color: rgba(255, 255, 255, 0.4);
   display: flex;
   align-items: center;
   gap: 8px;
+  white-space: nowrap;
 }
 
 .privacy-badge {
@@ -121,19 +156,19 @@
 }
 
 .privacy-badge.public {
-  background: rgba(255, 255, 255, 0.2);
-  color: #eee;
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.4);
 }
 
 .privacy-badge.private {
-  background: rgba(0, 0, 0, 0.4);
-  color: #aaa;
+  background: rgba(0, 0, 0, 0.3);
+  color: rgba(255, 255, 255, 0.3);
 }
 
 .btn-delete {
   background: transparent;
   border: none;
-  color: #ff6b6b;
+  color: rgba(255, 107, 107, 0.4);
   cursor: pointer;
   padding: 0;
   font-size: 1.8rem;
@@ -141,9 +176,35 @@
 }
 
 .btn-delete:hover {
-  color: #ff4c4c;
+  color: rgba(255, 107, 107, 0.8);
 }
 
 .myEmotion {
   flex-direction: row-reverse;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 10px;
+  }
+  .emotionItem {
+    padding: 5px;
+    margin: 5px 0 20px 0;
+    gap: 8px;
+  }
+  .text {
+    padding: 12px;
+    font-size: 0.85em;
+  }
+  .date {
+    font-size: 0.65em;
+  }
+  .privacy-badge {
+    font-size: 0.6em;
+    padding: 2px 6px;
+  }
+  .delete-confirm button {
+    padding: 6px 8px;
+    font-size: 0.85em;
+  }
 }

@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, OnInit, inject } from '@angular/core';
+import { RouterLink, Router } from '@angular/router';
+import { AuthService } from '../../services/auth';
 
 @Component({
   selector: 'app-welcome',
@@ -8,4 +9,13 @@ import { RouterLink } from '@angular/router';
   templateUrl: './welcome.html',
   styleUrls: ['./welcome.css']
 })
-export class WelcomeComponent {}
+export class WelcomeComponent implements OnInit {
+  private authService = inject(AuthService);
+  private router = inject(Router);
+
+  ngOnInit(): void {
+    if (this.authService.isLoggedIn()) {
+      this.router.navigate(['/home']);
+    }
+  }
+}
