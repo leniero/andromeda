@@ -1,6 +1,16 @@
 <div class="auth-container">
-  <form [formGroup]="signupForm" (ngSubmit)="onSubmit()" class="glass-card">
-    <h2>Sign Up</h2>
+  <div class="glass-card">
+    <h2 class="rainbow-text-gradient">Sign Up</h2>
+
+    <div *ngIf="message" style="text-align: center; margin-top: 2rem;">
+      <div style="color: #4ade80; margin-bottom: 2rem; font-size: 1.2rem;">
+        {{ message }}
+      </div>
+      <a routerLink="/login" class="btn-primary" style="text-decoration: none; display: inline-block;">Go to Login</a>
+    </div>
+
+    <form *ngIf="!message" [formGroup]="signupForm" (ngSubmit)="onSubmit()" style="display: flex; flex-direction: column; gap: 1.5rem;">
+
     
     <div class="form-group">
       <label>Username</label>
@@ -19,8 +29,13 @@
 
     <div *ngIf="error" class="error-msg">{{ error }}</div>
 
-    <button type="submit" [disabled]="signupForm.invalid || isSubmitting" class="btn-primary mt-3">
-      {{ isSubmitting ? 'Creating account...' : 'Sign Up' }}
-    </button>
-  </form>
+      <button type="submit" [disabled]="signupForm.invalid || isSubmitting" class="btn-primary rainbow-gradient">
+        {{ isSubmitting ? 'Creating account...' : 'Sign Up' }}
+      </button>
+      
+      <div style="text-align: center; margin-top: 1rem;">
+        <a routerLink="/login" style="color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.9rem;">Already have an account? Login</a>
+      </div>
+    </form>
+  </div>
 </div>

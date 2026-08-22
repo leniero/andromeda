@@ -1,0 +1,23 @@
+<div class="auth-container">
+  <div class="glass-card">
+    <h2 class="rainbow-text-gradient">Email Verification</h2>
+    
+    <div *ngIf="isVerifying" style="text-align: center; color: rgba(255,255,255,0.7); margin-top: 1rem;">
+      <p>Verifying your email...</p>
+    </div>
+
+    <div *ngIf="!isVerifying" style="text-align: center; margin-top: 1rem;">
+      <div *ngIf="message" style="color: #4ade80; margin-bottom: 2rem;">
+        <h3>Success!</h3>
+        <p>{{ message }}</p>
+      </div>
+      
+      <div *ngIf="error" class="error-msg" style="margin-bottom: 2rem;">
+        <h3>Error</h3>
+        <p>{{ error }}</p>
+      </div>
+      
+      <a routerLink="/login" class="btn-primary" style="text-decoration: none; display: inline-block;">Go to Login</a>
+    </div>
+  </div>
+</div>

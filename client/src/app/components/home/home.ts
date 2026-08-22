@@ -1,7 +1,8 @@
-import { Component, ViewChild, ElementRef, HostListener } from '@angular/core';
+import { Component, ViewChild, ElementRef, HostListener, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { EmotionSpheresComponent } from '../emotion-spheres/emotion-spheres';
 import { EmotionFormComponent } from '../emotion-form/emotion-form';
+import { AuthService } from '../../services/auth';
 
 @Component({
   selector: 'app-home',
@@ -16,6 +17,8 @@ export class HomeComponent {
   showText = true;
   isFormVisible = false;
   isZoomed = false;
+  viewMode: 'world' | 'me' = 'world';
+  authService = inject(AuthService);
 
   onEmotionSelected(isZoomed: boolean) {
     this.isZoomed = isZoomed;
@@ -30,6 +33,10 @@ export class HomeComponent {
     if (this.isFormVisible && this.spheresComponent) {
       this.spheresComponent.closeDetail();
     }
+  }
+
+  setViewMode(mode: 'world' | 'me') {
+    this.viewMode = mode;
   }
 
   @HostListener('document:pointerdown', ['$event'])

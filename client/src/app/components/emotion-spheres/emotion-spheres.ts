@@ -19,6 +19,7 @@ export class EmotionSpheresComponent implements AfterViewInit, OnDestroy, OnChan
   @ViewChild('bgCanvas', { static: true }) bgCanvasRef!: ElementRef<HTMLCanvasElement>;
   @ViewChild('fgCanvas', { static: true }) fgCanvasRef!: ElementRef<HTMLCanvasElement>;
   @Input() showText: boolean = true;
+  @Input() viewMode: 'world' | 'me' = 'world';
   @Output() emotionSelected = new EventEmitter<boolean>();
 
   selectedEmotion: any = null;
@@ -162,6 +163,18 @@ export class EmotionSpheresComponent implements AfterViewInit, OnDestroy, OnChan
     // Listen for pointer interactions
     this.containerRef.nativeElement.addEventListener('pointerdown', this.onPointerDown);
     this.containerRef.nativeElement.addEventListener('pointerup', this.onPointerUp);
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['viewMode'] && !changes['viewMode'].isFirstChange() && this.font) {
+      this.fetchData();
+    }
+    
+    if (changes['showText'] && this.textGroups) {
+      this.textGroups.forEach(group => {
+        group.visible = this.showText && !this.selectedEmotion;
+      });
+    }
   }
 
   private initThreeJS(): void {
@@ -372,9 +385,25 @@ export class EmotionSpheresComponent implements AfterViewInit, OnDestroy, OnChan
     return sizeScale;
   }
 
+  private clearSpheres(): void {
+    this.spheres.forEach(s => {
+      this.scene.remove(s);
+      s.geometry.dispose();
+      (s.material as THREE.Material).dispose();
+    });
+    this.spheres = [];
+    
+    this.textGroups.forEach(tg => {
+      this.scene.remove(tg);
+    });
+    this.textGroups = [];
+  }
+
   private fetchData(): void {
-    this.emotionService.getEmotions().subscribe({
+    const request$ = this.viewMode === 'world' ? this.emotionService.getEmotions() : this.emotionService.getUserEmotions();
+    request$.subscribe({
       next: (data) => {
+        this.clearSpheres();
         this.renderSpheres(data);
       },
       error: (err) => {
@@ -798,14 +827,7 @@ export class EmotionSpheresComponent implements AfterViewInit, OnDestroy, OnChan
     this.fgRenderer.render(this.scene, this.camera);
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['showText'] && this.textGroups) {
-      this.textGroups.forEach(group => {
-        // Only show if we don't have a selected emotion (to keep blur clean)
-        group.visible = this.showText && !this.selectedEmotion;
-      });
-    }
-  }
+
 
   ngOnDestroy(): void {
     if (this.animationFrameId) {

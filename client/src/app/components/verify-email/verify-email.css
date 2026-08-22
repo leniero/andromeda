@@ -20,47 +20,22 @@
   gap: 1.5rem;
 }
 
-h2 {
+h2, h3 {
   margin: 0;
   text-align: center;
+}
+
+h2 {
   font-size: 2rem;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-label {
-  color: rgba(255, 255, 255, 0.8);
-  font-weight: 500;
-}
-
-input {
-  padding: 0.8rem;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  background: rgba(0, 0, 0, 0.2);
-  color: white;
-  font-family: inherit;
-  font-size: 1rem;
-}
-
-input:focus {
-  outline: none;
-  border-color: #9333ea;
 }
 
 .error-msg {
   color: #ff4d4d;
-  font-size: 0.9rem;
-  text-align: center;
 }
 
 .btn-primary {
   background: linear-gradient(90deg, #9333ea, #ef4444);
-  padding: 1rem;
+  padding: 1rem 2rem;
   border-radius: 8px;
   border: none;
   color: white;
@@ -70,11 +45,6 @@ input:focus {
   transition: opacity 0.2s;
 }
 
-.btn-primary:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.btn-primary:not(:disabled):hover {
+.btn-primary:hover {
   opacity: 0.9;
 }

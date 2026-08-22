@@ -1,13 +1,13 @@
 import { Component, inject, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './login.html',
   styleUrls: ['./login.css']
 })
@@ -42,7 +42,7 @@ export class LoginComponent {
         },
         error: (err) => {
           this.isSubmitting = false;
-          this.error = err.error?.error || 'Login failed. Please check your credentials.';
+          this.error = err.error?.message || err.error?.error || 'Login failed. Please check your credentials.';
           this.cdr.detectChanges();
         }
       });

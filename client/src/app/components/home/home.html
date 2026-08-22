@@ -1,9 +1,14 @@
-<app-emotion-spheres [showText]="showText" (emotionSelected)="onEmotionSelected($event)"></app-emotion-spheres>
+<app-emotion-spheres [showText]="showText" [viewMode]="viewMode" (emotionSelected)="onEmotionSelected($event)"></app-emotion-spheres>
 
 <div class="controls-overlay" *ngIf="!isZoomed">
   <button class="btn-toggle-text" (click)="toggleText()">
     {{ showText ? 'Hide Text' : 'Show Text' }}
   </button>
+  
+  <div class="view-toggle" *ngIf="authService.isLoggedIn$ | async">
+    <button [class.active]="viewMode === 'world'" (click)="setViewMode('world')">World</button>
+    <button [class.active]="viewMode === 'me'" (click)="setViewMode('me')">Me</button>
+  </div>
 </div>
 
 <div class="fab-container" #fabContainer>

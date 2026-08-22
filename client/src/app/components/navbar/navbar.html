@@ -10,8 +10,10 @@
     </ng-container>
 
     <ng-template #loggedOut>
-      <a routerLink="/login" routerLinkActive="active">Login</a>
-      <a routerLink="/signup" class="btn-primary">Sign Up</a>
+      <ng-container *ngIf="!isHiddenAuthPage">
+        <a routerLink="/login" routerLinkActive="active">Login</a>
+        <a routerLink="/signup" routerLinkActive="active">Sign Up</a>
+      </ng-container>
     </ng-template>
   </div>
 </nav>

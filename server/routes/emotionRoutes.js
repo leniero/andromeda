@@ -10,7 +10,9 @@ const auth = require('../middleware/auth'); // Middleware to check authenticatio
 // Submit an emotion (accessible to both logged-in and non-logged-in users)
 router.post('/submit', auth.optional, async (req, res) => {
   try {
-    const { emotion, text_input, latitude, longitude } = req.body;
+    const { emotion, text_input, latitude, longitude, isPublic } = req.body;
+
+    const isPublicPost = req.user ? (isPublic !== false) : true;
 
     let username = undefined;
     if (req.user) {
@@ -20,26 +22,30 @@ router.post('/submit', auth.optional, async (req, res) => {
       }
     }
 
-    // Save to the collective emotions collection
-    const newEmotion = new Emotion({
-      username,
-      emotion,
-      text_input,
-      latitude,
-      longitude,
-      local_time: new Date()
-    });
-    await newEmotion.save();
+    // Save to the collective emotions collection if public
+    if (isPublicPost) {
+      const newEmotion = new Emotion({
+        username,
+        emotion,
+        text_input: text_input ? text_input.trim() : text_input,
+        latitude,
+        longitude,
+        local_time: new Date()
+      });
+      await newEmotion.save();
+    }
 
     // If the user is logged in, save to their private emotions collection
     if (req.user) {
       const userEmotion = new UserEmotion({
         userId: req.user._id,
+        username,
         emotion,
-        text_input,
+        text_input: text_input ? text_input.trim() : text_input,
         latitude,
         longitude,
-        local_time: new Date()
+        local_time: new Date(),
+        isPublic: isPublicPost
       });
       await userEmotion.save();
     }
@@ -51,10 +57,27 @@ router.post('/submit', auth.optional, async (req, res) => {
 });
 
 // Get all public emotions (accessible to everyone)
-router.get('/get_emotions', async (req, res) => {
+router.get('/get_emotions', auth.optional, async (req, res) => {
   try {
-    const emotions = await Emotion.find().sort({ local_time: -1 });
-    res.status(200).json(emotions);
+    const publicEmotions = await Emotion.find().lean();
+    let userPrivateEmotions = [];
+    
+    if (req.user) {
+      userPrivateEmotions = await UserEmotion.find({ userId: req.user._id, isPublic: false }).lean();
+      
+      const userDoc = await User.findById(req.user._id).select('username').lean();
+      const username = userDoc ? userDoc.username : undefined;
+      
+      userPrivateEmotions = userPrivateEmotions.map(e => ({
+        ...e,
+        username: e.username || username
+      }));
+    }
+    
+    const allEmotions = [...publicEmotions, ...userPrivateEmotions];
+    allEmotions.sort((a, b) => new Date(b.local_time).getTime() - new Date(a.local_time).getTime());
+    
+    res.status(200).json(allEmotions);
   } catch (error) {
     res.status(500).json({ error: 'Server error' });
   }
@@ -63,8 +86,18 @@ router.get('/get_emotions', async (req, res) => {
 // Get logged-in user's emotions (accessible only to logged-in users)
 router.get('/get_user_emotions', auth.required, async (req, res) => {
   try {
-    const userEmotions = await UserEmotion.find({ userId: req.user._id }).sort({ local_time: -1 });
-    res.status(200).json(userEmotions);
+    const userEmotions = await UserEmotion.find({ userId: req.user._id }).sort({ local_time: -1 }).lean();
+    
+    // Fallback to fetch username for older entries that don't have it stored
+    const userDoc = await User.findById(req.user._id).select('username').lean();
+    const username = userDoc ? userDoc.username : undefined;
+    
+    const enrichedEmotions = userEmotions.map(e => ({
+      ...e,
+      username: e.username || username
+    }));
+    
+    res.status(200).json(enrichedEmotions);
   } catch (error) {
     res.status(500).json({ error: 'Server error' });
   }
@@ -78,14 +111,16 @@ router.delete('/:id', auth.required, async (req, res) => {
       return res.status(404).json({ error: 'Emotion not found' });
     }
     
-    // Find and delete the corresponding public Emotion
-    await Emotion.findOneAndDelete({
-      emotion: userEmotion.emotion,
-      text_input: userEmotion.text_input,
-      latitude: userEmotion.latitude,
-      longitude: userEmotion.longitude,
-      local_time: userEmotion.local_time
-    });
+    // Find and delete the corresponding public Emotion if it was public
+    if (userEmotion.isPublic !== false) {
+      await Emotion.findOneAndDelete({
+        emotion: userEmotion.emotion,
+        text_input: userEmotion.text_input,
+        latitude: userEmotion.latitude,
+        longitude: userEmotion.longitude,
+        local_time: userEmotion.local_time
+      });
+    }
 
     await UserEmotion.findByIdAndDelete(req.params.id);
     

@@ -1,19 +1,20 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-signup',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, RouterLink],
   templateUrl: './signup.html',
   styleUrls: ['./signup.css'] // using the same CSS structure as login
 })
 export class SignupComponent {
   signupForm: FormGroup;
   error: string = '';
+  message: string = '';
   isSubmitting = false;
 
   private fb = inject(FormBuilder);
@@ -33,8 +34,9 @@ export class SignupComponent {
       this.isSubmitting = true;
       this.error = '';
       this.authService.signup(this.signupForm.value).subscribe({
-        next: () => {
-          this.router.navigate(['/home']);
+        next: (res) => {
+          this.message = res.message;
+          this.isSubmitting = false;
         },
         error: (err) => {
           this.error = err.error?.error || 'Signup failed';

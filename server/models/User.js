@@ -21,6 +21,15 @@ const UserSchema = new mongoose.Schema({
     enum: ['user', 'admin'],
     default: 'user',
   },
+  isVerified: {
+    type: Boolean,
+    default: false
+  },
+  verificationToken: String,
+  verificationTokenExpires: Date,
+  resetPasswordToken: String,
+  resetPasswordExpires: Date
+
 });
 
 module.exports = mongoose.model('User', UserSchema);

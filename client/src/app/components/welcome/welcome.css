@@ -3,32 +3,35 @@
   justify-content: center;
   align-items: center;
   min-height: 100dvh;
-  text-align: center;
+  padding: 1rem;
 }
 
 .welcome-content {
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  padding: 4rem;
-  border-radius: 24px;
+  padding: 2.5rem;
+  border-radius: 16px;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  max-width: 600px;
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 h1 {
-  font-size: 3rem;
-  margin-bottom: 1rem;
-  background: linear-gradient(90deg, #9333ea, #ef4444);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  font-size: 2rem;
+  margin: 0;
+  text-align: center;
 }
 
 p {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   color: rgba(255, 255, 255, 0.7);
-  margin-bottom: 3rem;
-  line-height: 1.6;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+  text-align: center;
 }
 
 .actions {
@@ -48,6 +51,9 @@ p {
   width: 100%;
   max-width: 300px;
   transition: opacity 0.2s;
+  text-align: center;
+  display: block;
+  box-sizing: border-box;
 }
 
 .btn-secondary {
@@ -61,6 +67,9 @@ p {
   width: 100%;
   max-width: 300px;
   transition: background 0.2s;
+  text-align: center;
+  display: block;
+  box-sizing: border-box;
 }
 
 .btn-primary:hover {

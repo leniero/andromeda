@@ -12,6 +12,7 @@ export interface EmotionData {
   local_time: string;
   text_input?: string;
   distance?: number;
+  isPublic?: boolean;
 }
 
 @Injectable({

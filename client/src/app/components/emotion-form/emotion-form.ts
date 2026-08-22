@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { EmotionService, EmotionData } from '../../services/emotion';
 import { LocationService } from '../../services/location';
+import { AuthService } from '../../services/auth';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -17,6 +18,7 @@ export class EmotionFormComponent {
   private fb = inject(FormBuilder);
   private emotionService = inject(EmotionService);
   private locationService = inject(LocationService);
+  authService = inject(AuthService);
 
   emotions = ['Anger', 'Contempt', 'Disgust', 'Envy', 'Guilt', 'Shame', 'Fear', 'Sadness', 'Surprise', 'Interest', 'Hope', 'Relief', 'Satisfaction', 'Joy', 'Elation', 'Pride'];
 
@@ -47,7 +49,8 @@ export class EmotionFormComponent {
       emotion: ['', Validators.required],
       reason: ['', [Validators.required, Validators.maxLength(150)]],
       latitude: [0, Validators.required],
-      longitude: [0, Validators.required]
+      longitude: [0, Validators.required],
+      isPublic: [true]
     });
   }
 

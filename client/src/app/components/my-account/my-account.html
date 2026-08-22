@@ -1,6 +1,5 @@
 <div class="auth-container">
   <div class="glass-card">
-    <h2>Account</h2>
     
     <div class="profile-info" *ngIf="user; else loading">
       <div class="account-info" style="display: flex; flex-direction: column; gap: 1rem; align-items: stretch; width: 100%;">
@@ -11,7 +10,7 @@
 
         <ng-container *ngIf="!isEditing; else editForm">
           <div style="text-align: center;">
-            <p style="margin: 0; font-weight: bold; font-size: 1.2rem;">@{{ user.username }}</p>
+            <p class="rainbow-text-gradient" style="margin: 0; font-weight: bold; font-size: 1.5rem;">@{{ user.username }}</p>
             <p style="margin: 0; margin-top: 0.25rem; color: rgba(255,255,255,0.7);">{{ user.email }}</p>
           </div>
 
@@ -29,7 +28,7 @@
           </div>
           
           <div style="display: flex; gap: 0.5rem; justify-content: stretch; width: 100%;">
-            <button class="btn-primary" style="flex: 1; padding: 0.75rem;" (click)="updateProfile()">Save</button>
+            <button class="btn-primary rainbow-gradient" style="flex: 1; padding: 0.75rem;" (click)="updateProfile()">Save</button>
             <button class="btn-secondary" style="flex: 1; padding: 0.75rem;" (click)="toggleEdit()">Cancel</button>
           </div>
 

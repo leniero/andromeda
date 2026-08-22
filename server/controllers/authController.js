@@ -3,6 +3,8 @@
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
+const sendEmail = require('../utils/emailService');
 
 exports.getCurrentUser = async (req, res) => {
   try {
@@ -31,13 +33,41 @@ exports.signup = async (req, res) => {
       return res.status(409).json({ message: 'User already exists' });
     }
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User({ username, email, password: hashedPassword });
+    
+    // Generate verification token
+    const verificationToken = crypto.randomBytes(32).toString('hex');
+    // Token expires in 24 hours
+    const verificationTokenExpires = Date.now() + 24 * 60 * 60 * 1000;
+
+    const newUser = new User({ 
+      username, 
+      email, 
+      password: hashedPassword,
+      verificationToken,
+      verificationTokenExpires
+    });
+    
     await newUser.save();
-    const token = jwt.sign({ _id: newUser._id }, process.env.JWT_SECRET, { expiresIn: '30d' });
-    res.status(201).json({ message: 'User created successfully', token });
+
+    // Send verification email
+    const verifyUrl = `${process.env.CLIENT_URL || 'http://localhost:4200'}/verify-email/${verificationToken}`;
+    const emailHtml = `
+      <h2>Welcome to Andromeda, ${username}!</h2>
+      <p>Please verify your email address by clicking the link below:</p>
+      <a href="${verifyUrl}" style="background: #9333ea; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block; margin-top: 10px;">Verify Email</a>
+      <p>If you did not create this account, you can safely ignore this email.</p>
+    `;
+
+    await sendEmail({
+      to: newUser.email,
+      subject: 'Verify your Andromeda account',
+      html: emailHtml
+    });
+
+    res.status(201).json({ message: 'User created successfully. Please check your email to verify your account.' });
   } catch (error) {
     console.error('Error during signup:', error);
-    res.status(500).json({ message: 'Server error', error });
+    res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
 
@@ -53,6 +83,10 @@ exports.loginUser = async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(400).json({ message: 'Invalid Credentials' });
+    }
+
+    if (!user.isVerified) {
+      return res.status(401).json({ message: 'Please verify your email before logging in.', error: 'UNVERIFIED_EMAIL' });
     }
 
     const payload = {
@@ -88,5 +122,93 @@ exports.changePassword = async (req, res) => {
   } catch (err) {
     console.error('Error changing password:', err);
     res.status(500).json({ error: 'Server error' });
+  }
+};
+
+exports.verifyEmail = async (req, res) => {
+  try {
+    const { token } = req.params;
+    const user = await User.findOne({ 
+      verificationToken: token,
+      verificationTokenExpires: { $gt: Date.now() }
+    });
+
+    if (!user) {
+      return res.status(400).json({ message: 'Invalid or expired verification token' });
+    }
+
+    user.isVerified = true;
+    user.verificationToken = undefined;
+    user.verificationTokenExpires = undefined;
+    await user.save();
+
+    res.status(200).json({ message: 'Email verified successfully. You can now log in.' });
+  } catch (error) {
+    console.error('Error verifying email:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+exports.forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      // Return 200 even if user not found to prevent email enumeration
+      return res.status(200).json({ message: 'If that email is registered, a password reset link has been sent.' });
+    }
+
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    user.resetPasswordToken = resetToken;
+    user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+    await user.save();
+
+    const resetUrl = `${process.env.CLIENT_URL || 'http://localhost:4200'}/reset-password/${resetToken}`;
+    const emailHtml = `
+      <h2>Password Reset Request</h2>
+      <p>You requested a password reset. Click the link below to set a new password:</p>
+      <a href="${resetUrl}" style="background: #9333ea; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block; margin-top: 10px;">Reset Password</a>
+      <p>If you did not request this, please ignore this email.</p>
+      <p>This link expires in 1 hour.</p>
+    `;
+
+    await sendEmail({
+      to: user.email,
+      subject: 'Andromeda - Password Reset',
+      html: emailHtml
+    });
+
+    res.status(200).json({ message: 'If that email is registered, a password reset link has been sent.' });
+  } catch (error) {
+    console.error('Error in forgotPassword:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+exports.resetPassword = async (req, res) => {
+  try {
+    const { token } = req.params;
+    const { password } = req.body;
+
+    const user = await User.findOne({
+      resetPasswordToken: token,
+      resetPasswordExpires: { $gt: Date.now() }
+    });
+
+    if (!user) {
+      return res.status(400).json({ message: 'Invalid or expired password reset token' });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    user.password = hashedPassword;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
+    await user.save();
+
+    res.status(200).json({ message: 'Password has been reset successfully.' });
+  } catch (error) {
+    console.error('Error in resetPassword:', error);
+    res.status(500).json({ message: 'Server error' });
   }
 };

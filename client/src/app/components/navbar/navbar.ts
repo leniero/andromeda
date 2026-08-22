@@ -18,4 +18,12 @@ export class NavbarComponent {
     this.authService.logout();
     this.router.navigate(['/']);
   }
+
+  get isHiddenAuthPage(): boolean {
+    const hiddenRoutes = ['/', '/login', '/signup', '/forgot-password'];
+    // Check if the route is strictly one of the hidden routes, or starts with reset-password/verify-email
+    return hiddenRoutes.includes(this.router.url) || 
+           this.router.url.startsWith('/reset-password') || 
+           this.router.url.startsWith('/verify-email');
+  }
 }

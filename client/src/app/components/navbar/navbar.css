@@ -3,6 +3,8 @@
   justify-content: space-between;
   align-items: center;
   padding: calc(1rem + env(safe-area-inset-top, 0px)) 2rem 1rem 2rem;
+  min-height: 72px;
+  box-sizing: border-box;
   position: fixed;
   top: 0;
   left: 0;

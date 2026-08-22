@@ -12,13 +12,17 @@
 
 .controls-overlay {
   position: absolute;
-  top: calc(6rem + env(safe-area-inset-top, 0px));
+  top: calc(7.5rem + env(safe-area-inset-top, 0px));
   right: 2rem;
   z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
 }
 
 .btn-toggle-text {
-  padding: 0.75rem 1.5rem;
+  padding: 0.5rem 1rem;
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -27,11 +31,43 @@
   border-radius: 8px;
   cursor: pointer;
   font-weight: 600;
+  font-size: 0.85rem;
   transition: background 0.2s;
 }
 
 .btn-toggle-text:hover {
   background: rgba(255, 255, 255, 0.2);
+}
+
+.view-toggle {
+  display: flex;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.view-toggle button {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.85rem;
+}
+
+.view-toggle button:hover {
+  color: white;
+}
+
+.view-toggle button.active {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
 }
 
 .fab-container {
@@ -88,7 +124,7 @@
     left: 1rem;
   }
   .controls-overlay {
-    top: calc(4.5rem + env(safe-area-inset-top, 0px));
+    top: calc(6rem + env(safe-area-inset-top, 0px));
     right: 1rem;
   }
   .fab-container {

@@ -11,15 +11,18 @@
         
         <ng-container *ngIf="true">
           <div class="textContainer">
-            <span class="text">
-              "{{ emotion.text_input }}"
-            </span>
+            <span class="text">"{{ emotion.text_input }}"</span>
             <div class="meta-row">
-              <span class="date">
-                {{ formatDate(emotion.local_time) }}
-                <span *ngIf="emotion.distance !== undefined"> • {{ emotion.distance.toFixed(0) }}km away</span>
+              <span class="privacy-badge" [class.public]="emotion.isPublic !== false" [class.private]="emotion.isPublic === false">
+                {{ emotion.isPublic !== false ? 'Public' : 'Private' }}
               </span>
-              <button *ngIf="deletingId !== emotion._id" class="btn-delete" (click)="confirmDelete(emotion._id)" title="Delete Entry">&times;</button>
+              <div class="date-group">
+                <span class="date">
+                  {{ formatDate(emotion.local_time) }}
+                  <span *ngIf="emotion.distance !== undefined"> • {{ emotion.distance.toFixed(0) }}km away</span>
+                </span>
+                <button *ngIf="deletingId !== emotion._id" class="btn-delete" (click)="confirmDelete(emotion._id)" title="Delete Entry">&times;</button>
+              </div>
             </div>
             <div *ngIf="deletingId === emotion._id" style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 8px; padding: 10px; margin-top: 10px; text-align: center; width: 100%;">
               <p style="color: #ff6b6b; margin-top: 0; margin-bottom: 10px; font-weight: bold; font-size: 0.9em;">Delete this entry?</p>

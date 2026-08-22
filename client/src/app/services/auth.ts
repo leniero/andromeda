@@ -32,14 +32,7 @@ export class AuthService {
   }
 
   signup(userData: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/signup`, userData).pipe(
-      tap((res: any) => {
-        if (res.token) {
-          localStorage.setItem(this.tokenKey, res.token);
-          this.loggedInSubject.next(true);
-        }
-      })
-    );
+    return this.http.post(`${this.apiUrl}/signup`, userData);
   }
 
   logout(): void {
@@ -61,6 +54,18 @@ export class AuthService {
 
   changePassword(data: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/change-password`, data);
+  }
+
+  verifyEmail(token: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/verify-email/${token}`, {});
+  }
+
+  forgotPassword(email: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/forgot-password`, { email });
+  }
+
+  resetPassword(token: string, password: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/reset-password/${token}`, { password });
   }
 
   updateUser(userId: string, data: any): Observable<any> {
