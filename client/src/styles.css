@@ -12,6 +12,8 @@ body, html {
   font-family: 'JetBrains Mono', 'Fira Code', 'Roboto Mono', monospace;
   background: #000000;
   color: #c9d1d9;
+  min-height: 100vh;
+  min-height: 100dvh;
 }
 
 input, select, button, textarea {

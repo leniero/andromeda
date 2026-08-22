@@ -184,6 +184,9 @@
 }
 
 @media (max-width: 768px) {
+  .pageContainer {
+    padding-top: calc(5rem + env(safe-area-inset-top, 0px));
+  }
   .container {
     padding: 10px;
   }
