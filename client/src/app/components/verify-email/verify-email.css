@@ -7,12 +7,12 @@
 }
 
 .glass-card {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--glass-bg);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   padding: 2.5rem;
   border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--glass-border);
   width: 100%;
   max-width: 400px;
   display: flex;
@@ -38,7 +38,7 @@ h2 {
   padding: 1rem 2rem;
   border-radius: 8px;
   border: none;
-  color: white;
+  color: var(--text-primary);
   font-weight: bold;
   font-size: 1rem;
   cursor: pointer;

@@ -43,6 +43,8 @@ export class EmotionSpheresComponent implements AfterViewInit, OnDestroy, OnChan
   private targetCameraPos = new THREE.Vector3(0, 0, 4000);
   private targetOrbitCenter = new THREE.Vector3(0, 0, 0);
   private isCameraAnimating = false;
+  private isLightMode = false;
+  private mediaQueryList!: MediaQueryList;
 
   public formatDate(dateString: string): string {
     const options: Intl.DateTimeFormatOptions = { 
@@ -96,7 +98,7 @@ export class EmotionSpheresComponent implements AfterViewInit, OnDestroy, OnChan
     context.fillText(emoji, 10 * scaleFactor, 120 * scaleFactor);
     
     context.font = titleFont;
-    context.fillStyle = 'white';
+    context.fillStyle = this.isLightMode ? '#1f2937' : 'white';
     context.fillText(titleText, (emojiWidth / scaleFactor + 50) * scaleFactor, 120 * scaleFactor);
     
     const texture = new THREE.CanvasTexture(canvas);
@@ -128,7 +130,7 @@ export class EmotionSpheresComponent implements AfterViewInit, OnDestroy, OnChan
     canvas.height = logicalHeight * scaleFactor;
     
     context.font = font;
-    context.fillStyle = '#aaaaaa';
+    context.fillStyle = this.isLightMode ? '#6b7280' : '#aaaaaa';
     context.textBaseline = 'middle';
     context.textAlign = 'center';
     context.fillText(text, canvas.width / 2, canvas.height / 2);
@@ -163,6 +165,53 @@ export class EmotionSpheresComponent implements AfterViewInit, OnDestroy, OnChan
     // Listen for pointer interactions
     this.containerRef.nativeElement.addEventListener('pointerdown', this.onPointerDown);
     this.containerRef.nativeElement.addEventListener('pointerup', this.onPointerUp);
+    
+    // Listen for theme changes
+    if (typeof window !== 'undefined') {
+      this.mediaQueryList = window.matchMedia('(prefers-color-scheme: light)');
+      this.isLightMode = this.mediaQueryList.matches;
+      this.mediaQueryList.addEventListener('change', this.onThemeChange);
+    }
+  }
+
+  private onThemeChange = (e: MediaQueryListEvent) => {
+    this.isLightMode = e.matches;
+    this.updateThreeJsColors();
+  }
+
+  private updateThreeJsColors() {
+    const textColor = this.isLightMode ? 0x1f2937 : 0xffffff;
+    
+    this.textGroups.forEach(tg => {
+      tg.traverse(child => {
+        if (child instanceof THREE.Mesh && child.material instanceof THREE.MeshBasicMaterial) {
+          child.material.color.setHex(textColor);
+        }
+      });
+      
+      const emotionId = tg.userData['emotionId'];
+      if (this.selectedEmotion && this.selectedEmotion.emotion._id === emotionId) {
+         const header = tg.userData['headerSprite'];
+         const footer = tg.userData['footerSprite'];
+         if (header && footer) {
+           tg.remove(header);
+           if (header.material.map) header.material.map.dispose();
+           header.material.dispose();
+           tg.remove(footer);
+           if (footer.material.map) footer.material.map.dispose();
+           footer.material.dispose();
+           
+           const emoji = this.emotionEmojis[this.selectedEmotion.emotion.emotion] || '😶';
+           const newHeader = this.createHeaderSprite(this.selectedEmotion.emotion.emotion, emoji);
+           const newFooter = this.createFooterSprite(this.selectedEmotion.emotion.username, this.formatDate(this.selectedEmotion.emotion.local_time), this.selectedEmotion.distance);
+           
+           tg.add(newHeader);
+           tg.add(newFooter);
+           tg.userData['headerSprite'] = newHeader;
+           tg.userData['footerSprite'] = newFooter;
+         }
+      }
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -604,7 +653,7 @@ export class EmotionSpheresComponent implements AfterViewInit, OnDestroy, OnChan
         let charWidth = charGeometry.boundingBox!.max.x - charGeometry.boundingBox!.min.x;
         if (charStr === ' ') charWidth = sphereRadius * 0.15; 
 
-        const charMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
+        const charMaterial = new THREE.MeshBasicMaterial({ color: this.isLightMode ? 0x1f2937 : 0xffffff });
         const charMesh = new THREE.Mesh(charGeometry, charMaterial);
 
         const angle = i * angleIncrement;
@@ -893,5 +942,8 @@ export class EmotionSpheresComponent implements AfterViewInit, OnDestroy, OnChan
     }
     if (this.bgRenderer) this.bgRenderer.dispose();
     if (this.fgRenderer) this.fgRenderer.dispose();
+    if (this.mediaQueryList) {
+      this.mediaQueryList.removeEventListener('change', this.onThemeChange);
+    }
   }
 }

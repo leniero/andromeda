@@ -34,7 +34,7 @@
   position: absolute;
   z-index: 50;
   pointer-events: none;
-  color: white;
+  color: var(--text-primary);
   opacity: 0;
   transition: opacity 0.3s ease;
   transform: translateY(-50%); /* Centered vertically relative to sphere */
@@ -79,7 +79,7 @@
 
 .detail-time {
   font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--text-tertiary);
 }
 
 .detail-body {
@@ -94,7 +94,7 @@
   font-style: italic;
   color: rgba(255, 255, 255, 0.9);
   padding: 0.5rem;
-  background: rgba(0, 0, 0, 0.2);
+  background: var(--input-bg);
   border-radius: 8px;
 }
 
@@ -105,7 +105,7 @@
 }
 
 .meta-label {
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--text-tertiary);
 }
 
 .meta-value {
@@ -147,7 +147,7 @@
 
 .flying-char {
   position: absolute;
-  color: white;
+  color: var(--text-primary);
   font-size: 1.2rem;
   font-weight: 400;
   white-space: pre;

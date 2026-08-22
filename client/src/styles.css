@@ -1,5 +1,37 @@
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&display=swap');
 
+:root {
+  --bg-primary: #000000;
+  --text-primary: #c9d1d9;
+  --text-secondary: rgba(255, 255, 255, 0.8);
+  --text-tertiary: rgba(255, 255, 255, 0.4);
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --nav-bg: rgba(13, 17, 23, 0.7);
+  --input-bg: rgba(0, 0, 0, 0.2);
+  --input-border: rgba(255, 255, 255, 0.2);
+  --btn-secondary-bg: rgba(255, 255, 255, 0.1);
+  --btn-secondary-hover: rgba(255, 255, 255, 0.2);
+  --card-bg: #888;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg-primary: #f9fafb;
+    --text-primary: #1f2937;
+    --text-secondary: rgba(0, 0, 0, 0.8);
+    --text-tertiary: rgba(0, 0, 0, 0.4);
+    --glass-bg: rgba(255, 255, 255, 0.8);
+    --glass-border: rgba(0, 0, 0, 0.1);
+    --nav-bg: rgba(255, 255, 255, 0.8);
+    --input-bg: rgba(0, 0, 0, 0.05);
+    --input-border: rgba(0, 0, 0, 0.2);
+    --btn-secondary-bg: rgba(0, 0, 0, 0.05);
+    --btn-secondary-hover: rgba(0, 0, 0, 0.1);
+    --card-bg: #e5e7eb;
+  }
+}
+
 * {
   box-sizing: border-box;
 }
@@ -10,8 +42,8 @@ body, html {
   overflow-x: hidden;
   overflow-y: auto;
   font-family: 'JetBrains Mono', 'Fira Code', 'Roboto Mono', monospace;
-  background: #000000;
-  color: #c9d1d9;
+  background: var(--bg-primary);
+  color: var(--text-primary);
   min-height: 100vh;
   min-height: 100dvh;
 }
@@ -48,11 +80,11 @@ a {
 }
 
 .btn-secondary {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--btn-secondary-bg);
   padding: 0.75rem;
   border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: white;
+  border: 1px solid var(--glass-border);
+  color: var(--text-primary);
   font-weight: bold;
   font-size: 1rem;
   cursor: pointer;
@@ -60,7 +92,7 @@ a {
 }
 
 .btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--btn-secondary-hover);
 }
 
 .btn-danger {

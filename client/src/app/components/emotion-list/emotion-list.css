@@ -1,7 +1,7 @@
 .pageContainer {
   display: flex;
   flex-direction: column;
-  color: #fff;
+  color: var(--text-primary);
   padding-top: 5rem;
   width: 100%;
 }
@@ -74,7 +74,7 @@
 
 .orbit-text {
   font-size: 15px;
-  fill: rgba(255, 255, 255, 0.8);
+  fill: var(--text-secondary);
   font-weight: 600;
   letter-spacing: 2px;
 }
@@ -112,7 +112,7 @@
 
 .text {
   font-size: 0.9em;
-  background-color: #888;
+  background-color: var(--card-bg);
   padding: 15px;
   border-radius: 8px;
   text-align: left;
@@ -139,7 +139,7 @@
 
 .date {
   font-size: 0.8em;
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--text-tertiary);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -156,13 +156,14 @@
 }
 
 .privacy-badge.public {
-  background: rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.4);
+  background: var(--glass-border);
+  color: var(--text-secondary);
 }
 
 .privacy-badge.private {
-  background: rgba(0, 0, 0, 0.3);
-  color: rgba(255, 255, 255, 0.3);
+  background: var(--input-bg);
+  border: 1px solid var(--glass-border);
+  color: var(--text-secondary);
 }
 
 .btn-delete {

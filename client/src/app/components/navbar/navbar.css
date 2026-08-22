@@ -11,15 +11,15 @@
   left: 0;
   right: 0;
   z-index: 100;
-  background: rgba(13, 17, 23, 0.7);
+  background: var(--nav-bg);
   backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid var(--glass-border);
 }
 
 .nav-brand, .nav-links a {
   font-size: 1.2rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--text-secondary);
   text-decoration: none;
   transition: all 0.2s ease;
   cursor: pointer;
@@ -28,7 +28,7 @@
 }
 
 .nav-brand:hover, .nav-links a:hover {
-  color: #fff;
+  color: var(--text-primary);
 }
 
 
@@ -69,6 +69,12 @@
   margin-bottom: -12px;
 }
 
+@media (prefers-color-scheme: light) {
+  .nav-brand .logo-unselected {
+    content: url('/logo%20black.svg');
+  }
+}
+
 .nav-brand .logo-selected {
   height: 44px;
   margin-top: -14px;
@@ -90,8 +96,8 @@
 
 .btn-logout {
   background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  color: white;
+  border: 1px solid var(--input-border);
+  color: var(--text-primary);
   padding: 0.5rem 1rem;
   border-radius: 8px;
   cursor: pointer;
@@ -100,7 +106,7 @@
 }
 
 .btn-logout:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--glass-border);
 }
 
 @media (max-width: 768px) {
